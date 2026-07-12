@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <main>
       <nav className="nav shell" aria-label="主要導覽">
-        <a className="brand" href="#top" aria-label="諾秋工作室首頁"><span className="brand-mark">NQ</span><span><strong>諾秋工作室</strong><small>TRADE SYSTEMS</small></span></a>
+        <a className="brand" href="#top" aria-label="諾秋工作室首頁"><img className="brand-mark" src="/logo.png" alt="諾秋工作室標誌" /><span><strong>諾秋工作室</strong><small>TRADE SYSTEMS</small></span></a>
         <div className="nav-links"><a href="#services">服務</a><a href="#work">作品</a><a href="#pricing">報價</a><a href="#warranty">保固</a></div>
         <a className="nav-cta" href="mailto:nordchiou@gmail.com?subject=交易系統專案諮詢">討論專案 <span aria-hidden="true">↗</span></a>
       </nav>
@@ -75,7 +75,7 @@ export default function Home() {
       <section className="section shell process-section"><div className="section-heading"><p className="kicker">HOW WE WORK</p><h2>四步驟，讓需求可驗收</h2></div><div className="process-grid">{process.map(([no,title,desc])=><article key={no}><span>{no}</span><h3>{title}</h3><p>{desc}</p></article>)}</div></section>
 
       <section className="cta-section"><div className="shell cta-inner"><div><p className="kicker">LET&apos;S BUILD</p><h2>你有策略，我們把它變成系統。</h2><p>來信簡述交易市場、策略數量、資料來源與希望的執行方式，我們會協助整理下一步。</p></div><div className="contact-actions"><a className="button primary" href="mailto:nordchiou@gmail.com?subject=交易系統專案諮詢">nordchiou@gmail.com <span>↗</span></a><a href="tel:0926192178">0926-192-178</a><small>服務時間：週一至週日 07:00–24:00</small></div></div></section>
-      <footer className="footer shell"><div className="brand"><span className="brand-mark">NQ</span><span><strong>諾秋工作室</strong><small>NORDCHIOU STUDIO</small></span></div><p>統一編號 00884771</p><p>© 2026 諾秋工作室. All rights reserved.</p></footer>
+      <footer className="footer shell"><div className="brand"><img className="brand-mark" src="/logo.png" alt="諾秋工作室標誌" /><span><strong>諾秋工作室</strong><small>NORDCHIOU STUDIO</small></span></div><p>統一編號 00884771</p><p>© 2026 諾秋工作室. All rights reserved.</p></footer>
     </main>
   );
 }
