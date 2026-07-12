@@ -1,98 +1,27 @@
-# vinext-starter
+# nordchiou-website
 
-A clean full-stack starter running on
-[vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
-Drizzle support.
+諾秋工作室（下單機與策略回測程式）官網。以 [vinext](https://github.com/cloudflare/vinext)（Next.js on Vite）開發，靜態匯出後部署到 GitHub Pages，不依賴資料庫或 ChatGPT 登入。
 
-## Prerequisites
-
-- Node.js `>=22.13.0`
-
-## Quick Start
+## 開發
 
 ```bash
 npm install
-npm run dev
-npm run build
+npm run dev     # 本機開發
+npm run build   # 驗證 vinext build 產物
+npm run lint
 ```
 
-This starter does not use `wrangler.jsonc`.
+網站內容在 [app/page.tsx](app/page.tsx)，樣式在 [app/globals.css](app/globals.css)，靜態資源在 `public/`。
 
-## Included Shape
+## 部署
 
-- edit site code under `app/`
-- `.openai/hosting.json` declares optional Sites D1 and R2 bindings
-- `vite.config.ts` simulates declared bindings for local development
-- `db/schema.ts` starts intentionally empty
-- `examples/d1/` contains an optional D1 example surface
-- `drizzle.config.ts` supports local migration generation when needed
+推送到 `main` 後，GitHub Actions（[.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml)）會執行
+[scripts/export-github-pages.mjs](scripts/export-github-pages.mjs)：先 `vinext build`，
+啟動本機伺服器擷取渲染後的靜態 HTML，再連同 `public/` 中的圖片一起輸出到 `docs/`，由 GitHub Pages 直接發布該資料夾。
 
-## Workspace Auth Headers
+要在本機預覽最終發布結果，可直接打開 `docs/index.html` 或用任意靜態伺服器啟動 `docs/`，不需要登入 ChatGPT 或任何帳號。
 
-OpenAI workspace sites can read the current user's email from
-`oai-authenticated-user-email`.
+## 保留但未使用的基礎設施
 
-SIWC-authenticated workspace sites may also receive
-`oai-authenticated-user-full-name` when the user's SIWC profile has a non-empty
-`name` claim. The full-name value is percent-encoded UTF-8 and is accompanied by
-`oai-authenticated-user-full-name-encoding: percent-encoded-utf-8`.
-
-Treat the full name as optional and fall back to email when it is absent:
-
-```tsx
-import { headers } from "next/headers";
-
-export default async function Home() {
-  const requestHeaders = await headers();
-  const email = requestHeaders.get("oai-authenticated-user-email");
-  const encodedFullName = requestHeaders.get("oai-authenticated-user-full-name");
-  const fullName =
-    encodedFullName &&
-    requestHeaders.get("oai-authenticated-user-full-name-encoding") ===
-      "percent-encoded-utf-8"
-      ? decodeURIComponent(encodedFullName)
-      : null;
-
-  const displayName = fullName ?? email;
-  // ...
-}
-```
-
-## Optional Dispatch-Owned ChatGPT Sign-In
-
-Import the ready-to-use helpers from `app/chatgpt-auth.ts` when the site needs
-optional or required ChatGPT sign-in:
-
-- Use `getChatGPTUser()` for optional signed-in UI.
-- Use `requireChatGPTUser(returnTo)` for server-rendered pages that should send
-  anonymous visitors through Sign in with ChatGPT.
-- Use `chatGPTSignInPath(returnTo)` and `chatGPTSignOutPath(returnTo)` for
-  browser links or actions.
-- Pass a same-origin relative `returnTo` path for the destination after sign-in
-  or sign-out. The helper validates and safely encodes it.
-- Mark protected pages with `export const dynamic = "force-dynamic"` because
-  they depend on per-request identity headers.
-
-Dispatch owns `/signin-with-chatgpt`, `/signout-with-chatgpt`, `/callback`, the
-OAuth cookies, and identity header injection. Do not implement app routes for
-those reserved paths. Routes that do not import and call the helper remain
-anonymous-compatible.
-
-SIWC establishes identity only; it does not prove workspace membership. Use the
-Sites hosting platform's access policy controls for workspace-wide restrictions,
-or enforce explicit server-side membership or allowlist checks.
-
-Use SIWC for account pages, user-specific dashboards, saved records, and write
-actions tied to the current ChatGPT user. Leave public content anonymous.
-
-## Useful Commands
-
-- `npm run dev`: start local development
-- `npm run build`: verify the vinext build output
-- `npm test`: build the starter and verify its rendered loading skeleton
-- `npm run db:generate`: generate Drizzle migrations after schema changes
-
-## Learn More
-
-- [vinext Documentation](https://github.com/cloudflare/vinext)
-- [Drizzle D1 Guide](https://orm.drizzle.team/docs/get-started/d1-new)
+`vite.config.ts` 仍會讀取 `.openai/hosting.json` 並載入 `build/sites-vite-plugin.ts`、`worker/index.ts` ——
+這些是 vinext/Codex 專案模板的建置基礎設施，`vinext build` 需要它們才能執行，即使目前沒有啟用 D1／R2 資料庫，也保留原樣以維持建置流程正常運作。
