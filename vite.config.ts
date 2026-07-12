@@ -14,6 +14,11 @@ const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
 const localBindingConfig = {
   main: "./worker/index.ts",
   compatibility_flags: ["nodejs_compat"],
+  routes: [
+    { pattern: "nordchiou.com", custom_domain: true },
+    { pattern: "www.nordchiou.com", custom_domain: true },
+  ],
+  workers_dev: true,
   d1_databases: d1
     ? [
         {
