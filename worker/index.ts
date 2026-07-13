@@ -40,7 +40,11 @@ const worker = {
   ): Promise<Response> {
     const url = new URL(request.url);
 
-    if (url.protocol === "http:") {
+    const isLocalHost =
+      url.hostname === "127.0.0.1" ||
+      url.hostname === "localhost" ||
+      url.hostname === "0.0.0.0";
+    if (url.protocol === "http:" && !isLocalHost) {
       url.protocol = "https:";
       return Response.redirect(url.toString(), 301);
     }

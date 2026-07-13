@@ -7,7 +7,11 @@ const port = "4317";
 
 function spawnNpx(args, options) {
   if (process.platform === "win32") {
-    return spawn(process.env.ComSpec, ["/d", "/s", "/c", "npx", ...args], options);
+    return spawn(
+      process.env.ComSpec,
+      ["/d", "/s", "/c", "npx", ...args],
+      options,
+    );
   }
   return spawn("npx", args, options);
 }
@@ -16,7 +20,11 @@ function run(args) {
   return new Promise((resolve, reject) => {
     const child = spawnNpx(args, { cwd: root, stdio: "inherit" });
     child.on("error", reject);
-    child.on("exit", (code) => code === 0 ? resolve() : reject(new Error(`${args.join(" ")} exited with ${code}`)));
+    child.on("exit", (code) =>
+      code === 0
+        ? resolve()
+        : reject(new Error(`${args.join(" ")} exited with ${code}`)),
+    );
   });
 }
 
@@ -36,7 +44,10 @@ async function waitForPage(url) {
 
 await run(["vinext", "build"]);
 
-const server = spawnNpx(["vinext", "start", "-p", port], { cwd: root, stdio: "inherit" });
+const server = spawnNpx(["vinext", "start", "-p", port], {
+  cwd: root,
+  stdio: "inherit",
+});
 try {
   const rendered = await waitForPage(`http://127.0.0.1:${port}/`);
   const document = rendered.match(/<!DOCTYPE html><html[\s\S]*?<\/html>/i)?.[0];
@@ -49,10 +60,16 @@ try {
   const docs = join(root, "docs");
   await rm(docs, { recursive: true, force: true });
   await mkdir(docs, { recursive: true });
-  await cp(join(root, "dist", "client", "assets"), join(docs, "assets"), { recursive: true });
-  await cp(join(root, "public", "portfolio"), join(docs, "portfolio"), { recursive: true });
+  await cp(join(root, "dist", "client", "assets"), join(docs, "assets"), {
+    recursive: true,
+  });
+  await cp(join(root, "public", "portfolio"), join(docs, "portfolio"), {
+    recursive: true,
+  });
   await cp(join(root, "public", "logo.png"), join(docs, "logo.png"));
   await cp(join(root, "public", "favicon.ico"), join(docs, "favicon.ico"));
+  await cp(join(root, "public", "robots.txt"), join(docs, "robots.txt"));
+  await cp(join(root, "public", "sitemap.xml"), join(docs, "sitemap.xml"));
   await writeFile(join(docs, "index.html"), staticHtml, "utf8");
   await writeFile(join(docs, ".nojekyll"), "", "utf8");
 } finally {
