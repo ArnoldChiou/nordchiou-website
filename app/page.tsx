@@ -1,6 +1,6 @@
 const portfolio = [
   { tag: "CRYPTO / RUST", title: "Alpharnold Quant Trading System", description: "面向 Binance Futures 的多策略量化交易引擎，涵蓋即時行情、策略執行、下單、狀態回滾與部位對帳。", features: ["多幣種、多策略併行", "斷線與失敗狀態回復", "交易所倉位自動對帳"], accent: "lime", image: "/portfolio/alpharnold-system.png", alt: "Alpharnold 量化交易引擎系統架構與執行狀態展示" },
-  { tag: "BACKTEST / GPU + CPU", title: "Backtest Studio", description: "支援加密貨幣與台指期的桌面回測平台，讓使用者自行調整參數、比較策略，並輸出績效與交易明細。", features: ["突破、均線、週線反彈", "CPU / GPU 參數最佳化", "成本、滑價與轉倉模型"], accent: "blue", image: "/portfolio/backtest-studio.png", alt: "Backtest Studio 實際授權登入與回測工作台畫面" },
+  { tag: "BACKTEST / GPU + CPU", title: "Backtest Studio", description: "支援加密貨幣與台指期的桌面回測平台，讓使用者自行調整參數、比較策略，並輸出績效與交易明細。", features: ["突破、均線", "CPU / GPU 參數最佳化", "成本、滑價與轉倉模型"], accent: "blue", image: "/portfolio/backtest-studio.png", alt: "Backtest Studio 實際授權登入與回測工作台畫面" },
   { tag: "STOCK FUTURES / SHIOAJI", title: "個股期貨下單機", description: "串接永豐金 Shioaji 的個股期貨交易系統，具備盤前篩選、即時訊號、風控、委託狀態與持倉管理。", features: ["網頁化監控與參數調整", "模擬、訊號、正式下單分級", "委託回報與風控狀態機"], accent: "amber", image: "/portfolio/api-trade.png", alt: "個股期貨下單機實際策略參數與監控介面" },
 ];
 
