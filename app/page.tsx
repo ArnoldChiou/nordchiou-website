@@ -1,7 +1,7 @@
 const portfolio = [
-  { tag: "CRYPTO / RUST", title: "Alpharnold Quant Trading System", description: "面向 Binance Futures 的多策略量化交易引擎，涵蓋即時行情、策略執行、下單、狀態回滾與部位對帳。", features: ["多幣種、多策略併行", "斷線與失敗狀態回復", "交易所倉位自動對帳"], accent: "lime", image: "/portfolio/alpharnold-system.webp", alt: "Alpharnold 量化交易引擎系統架構與執行狀態展示", width: 1280, height: 720 },
-  { tag: "BACKTEST / GPU + CPU", title: "Backtest Studio", description: "支援加密貨幣與台指期的桌面回測平台，讓使用者自行調整參數、比較策略，並輸出績效與交易明細。", features: ["突破、均線", "CPU / GPU 參數最佳化", "成本、滑價與轉倉模型"], accent: "blue", image: "/portfolio/backtest-studio.webp", alt: "Backtest Studio 實際授權登入與回測工作台畫面", width: 1280, height: 614 },
-  { tag: "STOCK FUTURES / SHIOAJI", title: "個股期貨下單機", description: "串接永豐金 Shioaji 的個股期貨交易系統，具備盤前篩選、即時訊號、風控、委託狀態與持倉管理。", features: ["網頁化監控與參數調整", "模擬、訊號、正式下單分級", "委託回報與風控狀態機"], accent: "amber", image: "/portfolio/api-trade.webp", alt: "個股期貨下單機實際策略參數與監控介面", width: 1280, height: 720 },
+  { tag: "CRYPTO / RUST", title: "Alpharnold Quant Trading System", description: "面向 Binance Futures 的多策略量化交易引擎，涵蓋即時行情、策略執行、下單、狀態回滾與部位對帳。", stats: [["6 個月", "實盤運行"], ["3 個", "管理交易對"]], features: ["多幣種、多策略併行", "斷線與失敗狀態回復", "交易所倉位自動對帳"], accent: "lime", image: "/portfolio/alpharnold-system.webp", alt: "Alpharnold 量化交易引擎系統架構與執行狀態展示", width: 1280, height: 720 },
+  { tag: "BACKTEST / GPU + CPU", title: "Backtest Studio", description: "支援加密貨幣與台指期的桌面回測平台，讓使用者自行調整參數、比較策略，並輸出績效與交易明細。", stats: [["30 秒", "跑完 6 年歷史回測"], ["5 位", "授權使用者"]], features: ["突破、均線", "CPU / GPU 參數最佳化", "成本、滑價與轉倉模型"], accent: "blue", image: "/portfolio/backtest-studio.webp", alt: "Backtest Studio 實際授權登入與回測工作台畫面", width: 1280, height: 614 },
+  { tag: "STOCK FUTURES / SHIOAJI", title: "個股期貨下單機", description: "串接永豐金 Shioaji 的個股期貨交易系統，具備盤前篩選、即時訊號、風控、委託狀態與持倉管理。", stats: [["20 筆", "日均處理委託"], ["70%", "省下看盤時間"]], features: ["網頁化監控與參數調整", "模擬、訊號、正式下單分級", "委託回報與風控狀態機"], accent: "amber", image: "/portfolio/api-trade.webp", alt: "個股期貨下單機實際策略參數與監控介面", width: 1280, height: 720 },
 ];
 
 const process = [
@@ -110,7 +110,7 @@ export default function Home() {
 
       <section className="work-section" id="work"><div className="shell section">
         <div className="section-heading"><p className="kicker">SELECTED WORK</p><h2>已落地的交易系統</h2><p>不是概念展示，而是針對真實市場流程設計的完整作品。</p></div>
-        <div className="portfolio-list">{portfolio.map((item,index)=><article className={`portfolio-card ${item.accent}`} key={item.title}><div className="portfolio-index">0{index+1}</div><div className="portfolio-visual"><img src={item.image} alt={item.alt} width={item.width} height={item.height} loading="lazy" /></div><div className="portfolio-main"><span>{item.tag}</span><h3>{item.title}</h3><p>{item.description}</p><ul>{item.features.map(feature=><li key={feature}>{feature}</li>)}</ul></div></article>)}</div>
+        <div className="portfolio-list">{portfolio.map((item,index)=><article className={`portfolio-card ${item.accent}`} key={item.title}><div className="portfolio-index">0{index+1}</div><div className="portfolio-visual"><img src={item.image} alt={item.alt} width={item.width} height={item.height} loading="lazy" /></div><div className="portfolio-main"><span>{item.tag}</span><h3>{item.title}</h3><p>{item.description}</p><div className="portfolio-stats">{item.stats.map(([num,label])=><div key={label}><strong>{num}</strong><span>{label}</span></div>)}</div><ul>{item.features.map(feature=><li key={feature}>{feature}</li>)}</ul></div></article>)}</div>
       </div></section>
 
       <section className="section shell" id="pricing">
