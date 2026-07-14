@@ -1,7 +1,7 @@
 const portfolio = [
-  { tag: "CRYPTO / RUST", title: "Alpharnold Quant Trading System", description: "面向 Binance Futures 的多策略量化交易引擎，涵蓋即時行情、策略執行、下單、狀態回滾與部位對帳。", features: ["多幣種、多策略併行", "斷線與失敗狀態回復", "交易所倉位自動對帳"], accent: "lime", image: "/portfolio/alpharnold-system.png", alt: "Alpharnold 量化交易引擎系統架構與執行狀態展示" },
-  { tag: "BACKTEST / GPU + CPU", title: "Backtest Studio", description: "支援加密貨幣與台指期的桌面回測平台，讓使用者自行調整參數、比較策略，並輸出績效與交易明細。", features: ["突破、均線", "CPU / GPU 參數最佳化", "成本、滑價與轉倉模型"], accent: "blue", image: "/portfolio/backtest-studio.png", alt: "Backtest Studio 實際授權登入與回測工作台畫面" },
-  { tag: "STOCK FUTURES / SHIOAJI", title: "個股期貨下單機", description: "串接永豐金 Shioaji 的個股期貨交易系統，具備盤前篩選、即時訊號、風控、委託狀態與持倉管理。", features: ["網頁化監控與參數調整", "模擬、訊號、正式下單分級", "委託回報與風控狀態機"], accent: "amber", image: "/portfolio/api-trade.png", alt: "個股期貨下單機實際策略參數與監控介面" },
+  { tag: "CRYPTO / RUST", title: "Alpharnold Quant Trading System", description: "面向 Binance Futures 的多策略量化交易引擎，涵蓋即時行情、策略執行、下單、狀態回滾與部位對帳。", features: ["多幣種、多策略併行", "斷線與失敗狀態回復", "交易所倉位自動對帳"], accent: "lime", image: "/portfolio/alpharnold-system.webp", alt: "Alpharnold 量化交易引擎系統架構與執行狀態展示", width: 1280, height: 720 },
+  { tag: "BACKTEST / GPU + CPU", title: "Backtest Studio", description: "支援加密貨幣與台指期的桌面回測平台，讓使用者自行調整參數、比較策略，並輸出績效與交易明細。", features: ["突破、均線", "CPU / GPU 參數最佳化", "成本、滑價與轉倉模型"], accent: "blue", image: "/portfolio/backtest-studio.webp", alt: "Backtest Studio 實際授權登入與回測工作台畫面", width: 1280, height: 614 },
+  { tag: "STOCK FUTURES / SHIOAJI", title: "個股期貨下單機", description: "串接永豐金 Shioaji 的個股期貨交易系統，具備盤前篩選、即時訊號、風控、委託狀態與持倉管理。", features: ["網頁化監控與參數調整", "模擬、訊號、正式下單分級", "委託回報與風控狀態機"], accent: "amber", image: "/portfolio/api-trade.webp", alt: "個股期貨下單機實際策略參數與監控介面", width: 1280, height: 720 },
 ];
 
 const process = [
@@ -11,12 +11,71 @@ const process = [
   ["04", "交付與保固", "完成操作說明與驗收；交付日起提供三個月程式錯誤保固。"],
 ];
 
+const faq = [
+  { q: "開發一套下單機或回測程式的費用怎麼計算？", a: "專案啟動費 NT$20,000，每一條策略加收 NT$5,000。一條策略的專案起價為 NT$25,000；報價範例：啟動費 NT$20,000 加 2 條策略 NT$10,000，共 NT$30,000。實際金額依資料來源、API、介面與部署難度確認。" },
+  { q: "支援哪些市場與券商、交易所？", a: "支援台灣股票、期貨與加密貨幣市場，包含永豐金 Shioaji 個股期貨下單、Binance Futures 量化交易引擎，以及台指期與加密貨幣的策略回測。" },
+  { q: "保固範圍是什麼？", a: "保固期自專案驗收交付日起算三個月。在已確認的功能範圍、操作方式與執行環境下，可重現且由程式本身造成的錯誤、異常或與驗收規格不符，保固內免費修復。新增功能、第三方 API 規格變更、資料品質、網路與主機故障等不在程式錯誤保固範圍內，另行評估報價。" },
+  { q: "策略邏輯改動怎麼收費？", a: "保固期內每次 NT$1,000，保固期外每次 NT$3,000。每次改動的範圍與驗收方式於施工前確認。" },
+  { q: "保固到期後的維護費用是多少？", a: "三個月保固到期後，每月維護費 NT$1,000，涵蓋既有系統的一般維護與運行協助；新增功能另行報價。" },
+  { q: "開發流程是什麼？", a: "四個步驟：一、需求拆解，確認市場、券商或交易所、資料來源、進出場邏輯與執行環境；二、規格與報價，把策略條件寫成可驗收規格；三、開發與模擬，先完成資料、回測或模擬下單，逐步驗證；四、交付與保固，完成操作說明與驗收，交付日起提供三個月程式錯誤保固。" },
+];
+
+const businessJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  name: "諾秋工作室",
+  alternateName: "Nordchiou Studio",
+  url: "https://nordchiou.com/",
+  logo: "https://nordchiou.com/logo.png",
+  image: "https://nordchiou.com/og.png",
+  description: "專注股票、期貨、加密貨幣的自動下單機、策略回測與客製化量化交易系統開發。",
+  email: "nordchiou@gmail.com",
+  telephone: "+886-926-192-178",
+  taxID: "00884771",
+  areaServed: { "@type": "Country", name: "Taiwan" },
+  knowsLanguage: "zh-Hant",
+  openingHoursSpecification: [
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+      opens: "07:00",
+      closes: "23:59",
+    },
+  ],
+  priceRange: "NT$20,000 起",
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "交易系統開發服務",
+    itemListElement: [
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "自動下單機開發", description: "串接券商或交易所 API，處理即時行情、進出場、委託回報、持倉同步、斷線重連與風控。" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "策略回測程式開發", description: "將策略規則轉成可重複驗證的回測引擎，納入手續費、滑價、口數與市場制度。" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "客製化策略整合", description: "將 TradingView、Python、Excel 或人工規則程式化，補齊風控並接上下單流程。" } },
+      { "@type": "Offer", price: "20000", priceCurrency: "TWD", itemOffered: { "@type": "Service", name: "專案啟動費" } },
+      { "@type": "Offer", price: "5000", priceCurrency: "TWD", itemOffered: { "@type": "Service", name: "每一條策略" } },
+      { "@type": "Offer", price: "1000", priceCurrency: "TWD", itemOffered: { "@type": "Service", name: "保固後每月維護費" } },
+    ],
+  },
+};
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faq.map(({ q, a }) => ({
+    "@type": "Question",
+    name: q,
+    acceptedAnswer: { "@type": "Answer", text: a },
+  })),
+};
+
 export default function Home() {
   return (
     <main>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(businessJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+
       <nav className="nav shell" aria-label="主要導覽">
-        <a className="brand" href="#top" aria-label="諾秋工作室首頁"><img className="brand-mark" src="/logo.png" alt="諾秋工作室標誌" /><span><strong>諾秋工作室</strong><small>TRADE SYSTEMS</small></span></a>
-        <div className="nav-links"><a href="#services">服務</a><a href="#work">作品</a><a href="#pricing">報價</a><a href="#warranty">保固</a></div>
+        <a className="brand" href="#top" aria-label="諾秋工作室首頁"><img className="brand-mark" src="/logo.png" alt="諾秋工作室標誌" width={42} height={42} /><span><strong>諾秋工作室</strong><small>TRADE SYSTEMS</small></span></a>
+        <div className="nav-links"><a href="#services">服務</a><a href="#work">作品</a><a href="#pricing">報價</a><a href="#warranty">保固</a><a href="#faq">常見問題</a></div>
         <a className="nav-cta" href="mailto:nordchiou@gmail.com?subject=交易系統專案諮詢">討論專案 <span aria-hidden="true">↗</span></a>
       </nav>
 
@@ -49,7 +108,7 @@ export default function Home() {
 
       <section className="work-section" id="work"><div className="shell section">
         <div className="section-heading"><p className="kicker">SELECTED WORK</p><h2>已落地的交易系統</h2><p>不是概念展示，而是針對真實市場流程設計的完整作品。</p></div>
-        <div className="portfolio-list">{portfolio.map((item,index)=><article className={`portfolio-card ${item.accent}`} key={item.title}><div className="portfolio-index">0{index+1}</div><div className="portfolio-visual"><img src={item.image} alt={item.alt} /></div><div className="portfolio-main"><span>{item.tag}</span><h3>{item.title}</h3><p>{item.description}</p><ul>{item.features.map(feature=><li key={feature}>{feature}</li>)}</ul></div></article>)}</div>
+        <div className="portfolio-list">{portfolio.map((item,index)=><article className={`portfolio-card ${item.accent}`} key={item.title}><div className="portfolio-index">0{index+1}</div><div className="portfolio-visual"><img src={item.image} alt={item.alt} width={item.width} height={item.height} loading="lazy" /></div><div className="portfolio-main"><span>{item.tag}</span><h3>{item.title}</h3><p>{item.description}</p><ul>{item.features.map(feature=><li key={feature}>{feature}</li>)}</ul></div></article>)}</div>
       </div></section>
 
       <section className="section shell" id="pricing">
@@ -74,8 +133,13 @@ export default function Home() {
 
       <section className="section shell process-section"><div className="section-heading"><p className="kicker">HOW WE WORK</p><h2>四步驟，讓需求可驗收</h2></div><div className="process-grid">{process.map(([no,title,desc])=><article key={no}><span>{no}</span><h3>{title}</h3><p>{desc}</p></article>)}</div></section>
 
+      <section className="section shell faq-section" id="faq">
+        <div className="section-heading"><p className="kicker">FAQ</p><h2>常見問題</h2></div>
+        <div className="faq-list">{faq.map(({q,a})=><details key={q}><summary>{q}<span aria-hidden="true">+</span></summary><p>{a}</p></details>)}</div>
+      </section>
+
       <section className="cta-section"><div className="shell cta-inner"><div><p className="kicker">LET&apos;S BUILD</p><h2>你有策略，我們把它變成系統。</h2><p>來信簡述交易市場、策略數量、資料來源與希望的執行方式，我們會協助整理下一步。</p></div><div className="contact-actions"><a className="button primary" href="mailto:nordchiou@gmail.com?subject=交易系統專案諮詢">nordchiou@gmail.com <span>↗</span></a><a href="tel:0926192178">0926-192-178</a><small>服務時間：週一至週日 07:00–24:00</small></div></div></section>
-      <footer className="footer shell"><div className="brand"><img className="brand-mark" src="/logo.png" alt="諾秋工作室標誌" /><span><strong>諾秋工作室</strong><small>NORDCHIOU STUDIO</small></span></div><p>統一編號 00884771</p><p>© 2026 諾秋工作室. All rights reserved.</p></footer>
+      <footer className="footer shell"><div className="brand"><img className="brand-mark" src="/logo.png" alt="諾秋工作室標誌" width={42} height={42} /><span><strong>諾秋工作室</strong><small>NORDCHIOU STUDIO</small></span></div><p>統一編號 00884771</p><p>© 2026 諾秋工作室. All rights reserved.</p></footer>
     </main>
   );
 }

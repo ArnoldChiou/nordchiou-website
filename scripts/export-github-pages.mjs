@@ -54,7 +54,10 @@ try {
   if (!document) throw new Error("Could not extract rendered HTML");
 
   const staticHtml = document
-    .replace(/<script\b[^>]*>[\s\S]*?<\/script>\s*/gi, "")
+    .replace(
+      /<script\b(?![^>]*application\/ld\+json)[^>]*>[\s\S]*?<\/script>\s*/gi,
+      "",
+    )
     .replace(/<link\b[^>]*rel="modulepreload"[^>]*>\s*/gi, "");
 
   const docs = join(root, "docs");
@@ -67,6 +70,7 @@ try {
     recursive: true,
   });
   await cp(join(root, "public", "logo.png"), join(docs, "logo.png"));
+  await cp(join(root, "public", "og.png"), join(docs, "og.png"));
   await cp(join(root, "public", "favicon.ico"), join(docs, "favicon.ico"));
   await cp(join(root, "public", "robots.txt"), join(docs, "robots.txt"));
   await cp(join(root, "public", "sitemap.xml"), join(docs, "sitemap.xml"));

@@ -49,6 +49,12 @@ const worker = {
       return Response.redirect(url.toString(), 301);
     }
 
+    if (url.hostname === "www.nordchiou.com") {
+      url.hostname = "nordchiou.com";
+      url.protocol = "https:";
+      return Response.redirect(url.toString(), 301);
+    }
+
     if (url.pathname === "/_vinext/image") {
       const allowedWidths = [...DEFAULT_DEVICE_SIZES, ...DEFAULT_IMAGE_SIZES];
       return handleImageOptimization(
