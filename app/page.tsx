@@ -73,18 +73,20 @@ export default function Home() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(businessJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
-      <nav className="nav shell" aria-label="主要導覽">
-        <a className="brand" href="#top" aria-label="諾秋工作室首頁"><img className="brand-mark" src="/logo.png" alt="諾秋工作室標誌" width={42} height={42} /><span><strong>諾秋工作室</strong><small>TRADE SYSTEMS</small></span></a>
-        <div className="nav-links"><a href="#services">服務</a><a href="#work">作品</a><a href="#pricing">報價</a><a href="#warranty">保固</a><a href="#faq">常見問題</a></div>
-        <a className="nav-cta" href="mailto:nordchiou@gmail.com?subject=交易系統專案諮詢">討論專案 <span aria-hidden="true">↗</span></a>
-      </nav>
+      <div className="nav-wrap">
+        <nav className="nav shell" aria-label="主要導覽">
+          <a className="brand" href="#top" aria-label="諾秋工作室首頁"><img className="brand-mark" src="/logo.png" alt="諾秋工作室標誌" width={42} height={42} /><span><strong>諾秋工作室</strong><small>TRADE SYSTEMS</small></span></a>
+          <div className="nav-links"><a href="#services">服務</a><a href="#work">作品</a><a href="#pricing">報價</a><a href="#warranty">保固</a><a href="#faq">常見問題</a></div>
+          <a className="nav-cta" href="mailto:nordchiou@gmail.com?subject=交易系統專案諮詢">討論專案 <span aria-hidden="true">↗</span></a>
+        </nav>
+      </div>
 
       <header className="hero shell" id="top">
         <div className="hero-copy">
           <p className="eyebrow"><span /> 股票・期貨・加密貨幣</p>
           <h1>把交易策略，<br />做成<span>真正能跑</span>的系統。</h1>
           <p className="hero-lead">我們是一支專注於下單機與回測程式的開發團隊。從策略規格、歷史驗證、風控，到 API 串接與正式執行，替你的交易流程打造可靠工具。</p>
-          <div className="hero-actions"><a className="button primary" href="mailto:nordchiou@gmail.com?subject=交易系統專案諮詢">開始討論需求 <span>→</span></a><a className="button secondary" href="#work">查看實作案例</a></div>
+          <div className="hero-actions"><a className="button line" href="https://lin.ee/65uAD7mm" target="_blank" rel="noopener">加 LINE 諮詢 <span>↗</span></a><a className="button primary" href="mailto:nordchiou@gmail.com?subject=交易系統專案諮詢">開始討論需求 <span>→</span></a><a className="button secondary" href="#work">查看實作案例</a></div>
           <div className="market-list" aria-label="支援市場"><span>TAIWAN STOCKS</span><i /><span>FUTURES</span><i /><span>CRYPTO</span></div>
         </div>
         <div className="terminal" aria-label="交易系統示意面板">
@@ -118,7 +120,32 @@ export default function Home() {
           <div className="price-card"><p>PER STRATEGY</p><h3><small>+ NT$</small>5,000</h3><span>每一條策略</span><p className="price-note">一條策略的專案起價為 <strong>NT$25,000</strong>。多一條策略，再加 NT$5,000。</p></div>
           <div className="price-card"><p>AFTER WARRANTY</p><h3><small>NT$</small>1,000</h3><span>每月維護費</span><p className="price-note">三個月保固到期後開始計收，涵蓋既有系統的一般維護與運行協助；新增功能另行報價。</p></div>
         </div>
-        <p className="pricing-example"><b>報價範例</b> 啟動費 NT$20,000 ＋ 2 條策略 NT$10,000 ＝ <strong>NT$30,000</strong></p>
+        <div className="quote-calc">
+          <input type="radio" name="qn" id="qn1" defaultChecked />
+          <input type="radio" name="qn" id="qn2" />
+          <input type="radio" name="qn" id="qn3" />
+          <input type="radio" name="qn" id="qn4" />
+          <input type="radio" name="qn" id="qn5" />
+          <input type="radio" name="qn" id="qn6" />
+          <div className="quote-head"><b>報價試算</b><span>選擇策略數量，立即估算標準專案費用</span></div>
+          <div className="quote-chips" role="group" aria-label="策略數量">
+            <label htmlFor="qn1">1 條</label>
+            <label htmlFor="qn2">2 條</label>
+            <label htmlFor="qn3">3 條</label>
+            <label htmlFor="qn4">4 條</label>
+            <label htmlFor="qn5">5 條</label>
+            <label htmlFor="qn6">6 條</label>
+          </div>
+          <div className="quote-result">
+            <div className="quote-line r1"><span>啟動費 NT$20,000 ＋ 1 條策略 NT$5,000</span><strong>NT$25,000</strong></div>
+            <div className="quote-line r2"><span>啟動費 NT$20,000 ＋ 2 條策略 NT$10,000</span><strong>NT$30,000</strong></div>
+            <div className="quote-line r3"><span>啟動費 NT$20,000 ＋ 3 條策略 NT$15,000</span><strong>NT$35,000</strong></div>
+            <div className="quote-line r4"><span>啟動費 NT$20,000 ＋ 4 條策略 NT$20,000</span><strong>NT$40,000</strong></div>
+            <div className="quote-line r5"><span>啟動費 NT$20,000 ＋ 5 條策略 NT$25,000</span><strong>NT$45,000</strong></div>
+            <div className="quote-line r6"><span>啟動費 NT$20,000 ＋ 6 條策略 NT$30,000</span><strong>NT$50,000</strong></div>
+          </div>
+          <p className="quote-note">僅含標準專案的基本計價；實際金額依資料來源、API、介面與部署難度確認。</p>
+        </div>
       </section>
 
       <section className="warranty-section" id="warranty"><div className="shell section warranty-grid">
@@ -138,7 +165,7 @@ export default function Home() {
         <div className="faq-list">{faq.map(({q,a})=><details key={q}><summary>{q}<span aria-hidden="true">+</span></summary><p>{a}</p></details>)}</div>
       </section>
 
-      <section className="cta-section"><div className="shell cta-inner"><div><p className="kicker">LET&apos;S BUILD</p><h2>你有策略，我們把它變成系統。</h2><p>來信簡述交易市場、策略數量、資料來源與希望的執行方式，我們會協助整理下一步。</p></div><div className="contact-actions"><a className="button primary" href="mailto:nordchiou@gmail.com?subject=交易系統專案諮詢">nordchiou@gmail.com <span>↗</span></a><a href="tel:0926192178">0926-192-178</a><small>服務時間：週一至週日 07:00–24:00</small></div></div></section>
+      <section className="cta-section"><div className="shell cta-inner"><div><p className="kicker">LET&apos;S BUILD</p><h2>你有策略，我們把它變成系統。</h2><p>來信簡述交易市場、策略數量、資料來源與希望的執行方式，我們會協助整理下一步。</p></div><div className="contact-actions"><a className="button line" href="https://lin.ee/65uAD7mm" target="_blank" rel="noopener">加 LINE 諮詢 <span>↗</span></a><a className="button primary" href="mailto:nordchiou@gmail.com?subject=交易系統專案諮詢">nordchiou@gmail.com <span>↗</span></a><a href="tel:0926192178">0926-192-178</a><small>服務時間：週一至週日 07:00–24:00</small><span className="line-qr"><img src="/line-qr.png" alt="諾秋工作室 LINE 官方帳號 QR code" width={110} height={110} loading="lazy" /><small>掃描加 LINE</small></span></div></div></section>
       <footer className="footer shell"><div className="brand"><img className="brand-mark" src="/logo.png" alt="諾秋工作室標誌" width={42} height={42} /><span><strong>諾秋工作室</strong><small>NORDCHIOU STUDIO</small></span></div><p>統一編號 00884771</p><p>© 2026 諾秋工作室. All rights reserved.</p></footer>
     </main>
   );

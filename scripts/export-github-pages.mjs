@@ -48,17 +48,22 @@ const server = spawnNpx(["vinext", "start", "-p", port], {
   cwd: root,
   stdio: "inherit",
 });
-try {
-  const rendered = await waitForPage(`http://127.0.0.1:${port}/`);
+function toStaticHtml(rendered) {
   const document = rendered.match(/<!DOCTYPE html><html[\s\S]*?<\/html>/i)?.[0];
   if (!document) throw new Error("Could not extract rendered HTML");
 
-  const staticHtml = document
+  return document
     .replace(
       /<script\b(?![^>]*application\/ld\+json)[^>]*>[\s\S]*?<\/script>\s*/gi,
       "",
     )
     .replace(/<link\b[^>]*rel="modulepreload"[^>]*>\s*/gi, "");
+}
+
+try {
+  const staticHtml = toStaticHtml(
+    await waitForPage(`http://127.0.0.1:${port}/`),
+  );
 
   const docs = join(root, "docs");
   await rm(docs, { recursive: true, force: true });
@@ -71,10 +76,26 @@ try {
   });
   await cp(join(root, "public", "logo.png"), join(docs, "logo.png"));
   await cp(join(root, "public", "og.png"), join(docs, "og.png"));
+  await cp(join(root, "public", "line-qr.png"), join(docs, "line-qr.png"));
   await cp(join(root, "public", "favicon.ico"), join(docs, "favicon.ico"));
   await cp(join(root, "public", "robots.txt"), join(docs, "robots.txt"));
   await cp(join(root, "public", "sitemap.xml"), join(docs, "sitemap.xml"));
   await writeFile(join(docs, "index.html"), staticHtml, "utf8");
+
+  // GitHub Pages 會自動用 404.html 當找不到頁面的回應
+  try {
+    const notFoundRes = await fetch(`http://127.0.0.1:${port}/__not_found__`);
+    if (notFoundRes.status === 404) {
+      await writeFile(
+        join(docs, "404.html"),
+        toStaticHtml(await notFoundRes.text()),
+        "utf8",
+      );
+    }
+  } catch {
+    // 404 頁面產不出來不影響主要輸出
+  }
+
   await writeFile(join(docs, ".nojekyll"), "", "utf8");
 } finally {
   if (process.platform === "win32") {
