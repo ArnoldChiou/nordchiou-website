@@ -110,7 +110,11 @@ export default function Home() {
 
       <section className="work-section" id="work"><div className="shell section">
         <div className="section-heading"><p className="kicker">SELECTED WORK</p><h2>已落地的交易系統</h2><p>不是概念展示，而是針對真實市場流程設計的完整作品。</p></div>
-        <div className="portfolio-list">{portfolio.map((item,index)=><article className={`portfolio-card ${item.accent}`} key={item.title}><div className="portfolio-index">0{index+1}</div><div className="portfolio-visual"><img src={item.image} alt={item.alt} width={item.width} height={item.height} loading="lazy" /></div><div className="portfolio-main"><span>{item.tag}</span><h3>{item.title}</h3><p>{item.description}</p><div className="portfolio-stats">{item.stats.map(([num,label])=><div key={label}><strong>{num}</strong><span>{label}</span></div>)}</div><ul>{item.features.map(feature=><li key={feature}>{feature}</li>)}</ul></div></article>)}</div>
+        <div className="portfolio-list">{portfolio.map((item,index)=><article className={`portfolio-card ${item.accent}`} key={item.title}><div className="portfolio-index">0{index+1}</div><div className="portfolio-visual"><label className="portfolio-zoom" htmlFor={`lb${index}`}><img src={item.image} alt={item.alt} width={item.width} height={item.height} loading="lazy" /><span className="zoom-hint" aria-hidden="true">⤢ 點擊放大</span></label></div><div className="portfolio-main"><span>{item.tag}</span><h3>{item.title}</h3><p>{item.description}</p><div className="portfolio-stats">{item.stats.map(([num,label])=><div key={label}><strong>{num}</strong><span>{label}</span></div>)}</div><ul>{item.features.map(feature=><li key={feature}>{feature}</li>)}</ul></div></article>)}</div>
+        {portfolio.map((item,index)=><div key={item.title}>
+          <input type="checkbox" id={`lb${index}`} className="lightbox-toggle" aria-label={`放大檢視 ${item.title} 截圖`} />
+          <label htmlFor={`lb${index}`} className="lightbox"><img src={item.image} alt={item.alt} loading="lazy" /><span className="lightbox-close">✕ CLOSE</span></label>
+        </div>)}
       </div></section>
 
       <section className="section shell" id="pricing">
