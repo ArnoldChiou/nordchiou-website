@@ -76,7 +76,7 @@ export default function Home() {
       <div className="nav-wrap">
         <nav className="nav shell" aria-label="主要導覽">
           <a className="brand" href="#top" aria-label="諾秋工作室首頁"><img className="brand-mark" src="/logo.png" alt="諾秋工作室標誌" width={42} height={42} /><span><strong>諾秋工作室</strong><small>TRADE SYSTEMS</small></span></a>
-          <div className="nav-links"><a href="#services">服務</a><a href="#work">作品</a><a href="#pricing">報價</a><a href="#warranty">保固</a><a href="#faq">常見問題</a></div>
+          <div className="nav-links"><a href="#services">服務</a><a href="#work">作品</a><a href="#pricing">報價</a><a href="#warranty">保固</a><a href="#about">關於</a><a href="#faq">常見問題</a></div>
           <a className="nav-cta" href="mailto:nordchiou@gmail.com?subject=交易系統專案諮詢">討論專案 <span aria-hidden="true">↗</span></a>
         </nav>
       </div>
@@ -159,6 +159,18 @@ export default function Home() {
       </div></section>
 
       <section className="section shell process-section"><div className="section-heading"><p className="kicker">HOW WE WORK</p><h2>四步驟，讓需求可驗收</h2></div><div className="process-grid">{process.map(([no,title,desc])=><article key={no}><span>{no}</span><h3>{title}</h3><p>{desc}</p></article>)}</div></section>
+
+      <section className="section shell about-section" id="about">
+        <div className="section-heading split">
+          <div><p className="kicker">WHO WE ARE</p><h2>懂程式，<br />也懂市場的團隊</h2></div>
+          <p>諾秋工作室是一支結合軟體工程與金融實務的開發團隊。我們同時理解程式的嚴謹與市場的現實——所以交付的不是概念展示，而是能承受實盤環境的系統。</p>
+        </div>
+        <div className="about-stats">
+          <div><strong>6 年</strong><span>軟體開發經歷</span></div>
+          <div><strong>3 年</strong><span>金融業經歷</span></div>
+          <div><strong>2 年</strong><span>專注交易系統開發</span></div>
+        </div>
+      </section>
 
       <section className="section shell faq-section" id="faq">
         <div className="section-heading"><p className="kicker">FAQ</p><h2>常見問題</h2></div>
