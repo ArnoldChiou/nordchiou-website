@@ -404,10 +404,10 @@
           <tr>
             <th class="stripe"></th>
             <th data-key="code">代號 / 名稱<span class="arrow">▾</span></th>
-            <th data-key="market">市場<span class="arrow">▾</span></th>
+            <th data-key="ratio" class="active" style="text-align:right">維持率<span class="arrow">▾</span></th>
             <th data-key="price" style="text-align:right">現價<span class="arrow">▾</span></th>
             <th data-key="balance" style="text-align:right">融資餘額(張)<span class="arrow">▾</span></th>
-            <th data-key="ratio" class="active" style="text-align:right">維持率<span class="arrow">▾</span></th>
+            <th data-key="market">市場<span class="arrow">▾</span></th>
           </tr>
         </thead>
         <tbody id="tableBody"></tbody>
@@ -526,10 +526,10 @@ function renderTable() {
           <div class="stock-name">${d.name}</div>
           <div class="stock-code mono">${d.code}</div>
         </td>
-        <td><span class="market-tag">${marketLabel}</span></td>
+        <td class="num-cell"><span class="ratio-pill ${risk} mono">${fmt(d.ratio, 1)}%</span></td>
         <td class="num-cell price mono">${fmt(d.price, 2)}</td>
         <td class="num-cell mono">${fmt(d.balance, 0)}</td>
-        <td class="num-cell"><span class="ratio-pill ${risk} mono">${fmt(d.ratio, 1)}%</span></td>
+        <td><span class="market-tag">${marketLabel}</span></td>
       </tr>
     `;
   }).join('');
