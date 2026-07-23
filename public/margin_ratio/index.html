@@ -267,7 +267,8 @@
   table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 880px;
+    table-layout: fixed;
+    min-width: 720px;
   }
 
   thead th {
@@ -336,7 +337,7 @@
   .ratio-pill.warn { background: var(--warn-soft); color: var(--warn); }
   .ratio-pill.safe { background: var(--safe-soft); color: var(--safe); }
 
-  .num-cell { text-align: right; color: var(--fg-muted); }
+  .num-cell { text-align: center; color: var(--fg-muted); }
   .num-cell.price { color: var(--fg); font-weight: 600; }
 
   footer.note {
@@ -400,14 +401,22 @@
   <div class="table-shell">
     <div class="table-scroll">
       <table>
+        <colgroup>
+          <col style="width:4px">
+          <col style="width:22%">
+          <col style="width:14%">
+          <col style="width:14%">
+          <col style="width:24%">
+          <col style="width:19%">
+        </colgroup>
         <thead>
           <tr>
             <th class="stripe"></th>
             <th data-key="code">代號 / 名稱<span class="arrow">▾</span></th>
-            <th data-key="ratio" class="active" style="text-align:right">維持率<span class="arrow">▾</span></th>
-            <th data-key="price" style="text-align:right">現價<span class="arrow">▾</span></th>
-            <th data-key="balance" style="text-align:right">融資餘額(張)<span class="arrow">▾</span></th>
-            <th data-key="market">市場<span class="arrow">▾</span></th>
+            <th data-key="ratio" class="active" style="text-align:center">維持率<span class="arrow">▾</span></th>
+            <th data-key="price" style="text-align:center">現價<span class="arrow">▾</span></th>
+            <th data-key="balance" style="text-align:center">融資餘額(張)<span class="arrow">▾</span></th>
+            <th data-key="market" style="text-align:right">市場<span class="arrow">▾</span></th>
           </tr>
         </thead>
         <tbody id="tableBody"></tbody>
@@ -529,7 +538,7 @@ function renderTable() {
         <td class="num-cell"><span class="ratio-pill ${risk} mono">${fmt(d.ratio, 1)}%</span></td>
         <td class="num-cell price mono">${fmt(d.price, 2)}</td>
         <td class="num-cell mono">${fmt(d.balance, 0)}</td>
-        <td><span class="market-tag">${marketLabel}</span></td>
+        <td style="text-align:right"><span class="market-tag">${marketLabel}</span></td>
       </tr>
     `;
   }).join('');
