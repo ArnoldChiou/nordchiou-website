@@ -74,6 +74,9 @@ try {
   await cp(join(root, "public", "portfolio"), join(docs, "portfolio"), {
     recursive: true,
   });
+  await cp(join(root, "public", "margin_ratio"), join(docs, "margin_ratio"), {
+    recursive: true,
+  });
   await cp(join(root, "public", "logo.png"), join(docs, "logo.png"));
   await cp(join(root, "public", "og.png"), join(docs, "og.png"));
   await cp(join(root, "public", "line-qr.png"), join(docs, "line-qr.png"));

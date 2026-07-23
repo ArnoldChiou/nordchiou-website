@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>個股期貨融資維持率總覽｜諾秋工作室</title>
+<meta name="description" content="263 檔有股票期貨標的的個股融資維持率估算，只計算近400個交易日內實際追蹤到的融資部位。">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico">
+
+<style>
+  @font-face {
+    font-family: 'Space Grotesk Fallback';
+    src: local('Arial');
+  }
+
+  :root {
+    --ink: #0E1613;
+    --ink-2: #141F1B;
+    --ink-3: #1B2925;
+    --ink-border: #263832;
+    --paper: #EEF2EF;
+    --paper-2: #FFFFFF;
+    --paper-3: #E4E9E5;
+    --paper-border: #D2DAD4;
+    --text: #E6EDE9;
+    --text-muted: #8CA39B;
+    --text-dim: #5E726B;
+    --accent: #34ADA0;
+    --accent-soft: rgba(52, 173, 160, 0.14);
+    --danger: #E0664B;
+    --danger-soft: rgba(224, 102, 75, 0.16);
+    --warn: #DDA23E;
+    --warn-soft: rgba(221, 162, 62, 0.16);
+    --safe: #6BAE6E;
+    --safe-soft: rgba(107, 174, 110, 0.14);
+
+    --bg: var(--ink);
+    --surface: var(--ink-2);
+    --surface-2: var(--ink-3);
+    --border: var(--ink-border);
+    --fg: var(--text);
+    --fg-muted: var(--text-muted);
+    --fg-dim: var(--text-dim);
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: var(--paper);
+      --surface: var(--paper-2);
+      --surface-2: var(--paper-3);
+      --border: var(--paper-border);
+      --fg: #16211D;
+      --fg-muted: #4B5B54;
+      --fg-dim: #7C8B84;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: var(--ink);
+    --surface: var(--ink-2);
+    --surface-2: var(--ink-3);
+    --border: var(--ink-border);
+    --fg: var(--text);
+    --fg-muted: var(--text-muted);
+    --fg-dim: var(--text-dim);
+  }
+  :root[data-theme="light"] {
+    --bg: var(--paper);
+    --surface: var(--paper-2);
+    --surface-2: var(--paper-3);
+    --border: var(--paper-border);
+    --fg: #16211D;
+    --fg-muted: #4B5B54;
+    --fg-dim: #7C8B84;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .mono {
+    font-family: "SF Mono", "Cascadia Code", "Consolas", "Roboto Mono", monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 32px 24px 64px;
+  }
+
+  header.page-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  h1 {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 4px 0 2px;
+    text-wrap: balance;
+  }
+
+  .subtitle {
+    color: var(--fg-muted);
+    font-size: 13px;
+    margin: 0 0 28px;
+  }
+
+  .subtitle .mono { color: var(--fg-dim); }
+
+  /* Summary strip */
+  .summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+
+  .summary-cell {
+    background: var(--surface);
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .summary-cell .num {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .summary-cell .label {
+    font-size: 11.5px;
+    color: var(--fg-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .summary-cell.danger .num { color: var(--danger); }
+  .summary-cell.warn .num { color: var(--warn); }
+  .summary-cell.safe .num { color: var(--safe); }
+
+  /* Distribution bar */
+  .dist-bar {
+    display: flex;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 28px;
+    background: var(--surface-2);
+  }
+  .dist-seg { height: 100%; }
+
+  .dist-legend {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-top: -18px;
+    margin-bottom: 26px;
+    font-size: 11.5px;
+    color: var(--fg-muted);
+  }
+  .dist-legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .dist-legend i { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+    align-items: center;
+  }
+
+  .search-box {
+    position: relative;
+    flex: 1 1 220px;
+    min-width: 180px;
+  }
+
+  .search-box input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--fg);
+    border-radius: 8px;
+    padding: 9px 12px 9px 32px;
+    font-size: 13.5px;
+    font-family: inherit;
+  }
+  .search-box input:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: -1px;
+  }
+  .search-box svg {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.55;
+  }
+
+  .filter-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--fg-muted);
+    border-radius: 8px;
+    padding: 8px 13px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.12s, color 0.12s, border-color 0.12s;
+    font-family: inherit;
+    white-space: nowrap;
+  }
+  .filter-chip:hover { border-color: var(--accent); color: var(--fg); }
+  .filter-chip.active {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .filter-chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  .count-note {
+    font-size: 12px;
+    color: var(--fg-dim);
+    margin-bottom: 10px;
+  }
+
+  /* Table */
+  .table-shell {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--surface);
+  }
+  .table-scroll {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 880px;
+  }
+
+  thead th {
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--fg-dim);
+    font-weight: 600;
+    padding: 11px 14px;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    position: sticky;
+    top: 0;
+  }
+  thead th:hover { color: var(--fg); }
+  thead th .arrow { opacity: 0.4; margin-left: 3px; font-size: 9px; }
+  thead th.active .arrow { opacity: 1; color: var(--accent); }
+  thead th:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+  }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--surface-2); }
+
+  td {
+    padding: 10px 14px;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+
+  .stripe {
+    width: 4px;
+    padding: 0;
+  }
+  .stripe > div { width: 4px; height: 100%; min-height: 36px; }
+
+  .stock-name { font-weight: 600; color: var(--fg); }
+  .stock-code { color: var(--fg-dim); font-size: 12px; }
+
+  .market-tag {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--surface-2);
+    color: var(--fg-muted);
+  }
+
+  .ratio-pill {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 2px;
+    padding: 3px 9px;
+    border-radius: 100px;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .ratio-pill.danger { background: var(--danger-soft); color: var(--danger); }
+  .ratio-pill.warn { background: var(--warn-soft); color: var(--warn); }
+  .ratio-pill.safe { background: var(--safe-soft); color: var(--safe); }
+
+  .num-cell { text-align: right; color: var(--fg-muted); }
+  .num-cell.price { color: var(--fg); font-weight: 600; }
+
+  footer.note {
+    margin-top: 22px;
+    font-size: 11.5px;
+    color: var(--fg-dim);
+    line-height: 1.7;
+  }
+  footer.note code {
+    font-family: "SF Mono", Consolas, monospace;
+    background: var(--surface-2);
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+
+  .empty-state {
+    padding: 48px 20px;
+    text-align: center;
+    color: var(--fg-dim);
+    font-size: 13px;
+  }
+
+  @media (max-width: 640px) {
+    .summary { grid-template-columns: repeat(2, 1fr); }
+    h1 { font-size: 21px; }
+  }
+</style>
+</head>
+<body>
+
+
+
+<div class="wrap">
+  <header class="page-head">
+    <div>
+      <div class="eyebrow">個股期貨標的 · 融資維持率估算</div>
+      <h1>263 檔有股票期貨的個股，現在的融資維持率</h1>
+    </div>
+  </header>
+  <p class="subtitle">維持率只計算「400天窗口內實際追蹤到的近期融資部位」・融資成數假設 <span class="mono">60%</span>・資料至 <span class="mono">2026/07/21</span> 收盤</p>
+
+  <div class="summary" id="summaryStrip"></div>
+  <div class="dist-bar" id="distBar"></div>
+  <div class="dist-legend" id="distLegend"></div>
+
+  <div class="controls">
+    <div class="search-box">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input type="text" id="searchInput" placeholder="搜尋代號或名稱…" autocomplete="off" />
+    </div>
+    <button class="filter-chip active" data-market="all">全部市場</button>
+    <button class="filter-chip" data-market="TWSE">TWSE 上市</button>
+    <button class="filter-chip" data-market="TPEX">TPEX 上櫃</button>
+    <button class="filter-chip" data-risk="danger">&lt;100%</button>
+    <button class="filter-chip" data-risk="warn">100~130%</button>
+    <button class="filter-chip" data-risk="safe">&gt;130%</button>
+  </div>
+
+  <p class="count-note" id="countNote"></p>
+
+  <div class="table-shell">
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th class="stripe"></th>
+            <th data-key="code">代號 / 名稱<span class="arrow">▾</span></th>
+            <th data-key="market">市場<span class="arrow">▾</span></th>
+            <th data-key="price" style="text-align:right">現價<span class="arrow">▾</span></th>
+            <th data-key="balance" style="text-align:right">融資餘額(張)<span class="arrow">▾</span></th>
+            <th data-key="ratio" class="active" style="text-align:right">維持率<span class="arrow">▾</span></th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+    <div class="empty-state" id="emptyState" style="display:none;">找不到符合條件的股票</div>
+  </div>
+
+  <footer class="note">
+    維持率 = 現在收盤價 ÷ (窗口內加權平均成本 × 融資成數) × 100%。只計算「最近400個交易日內實際追蹤到的融資買進」，不含更早以前、追不到成本的舊部位（那部分只能用估算價位填補，容易失真，因此不列入）。融資成數統一假設 <code>60%</code>（無公開的每股實際成數資料來源）。130% 為一般融資追繳警戒線參考值。點欄位標題可排序，數字皆為估算值，非交易所公告的精確數字。
+  </footer>
+</div>
+
+<script>
+const DATA = [{"code": "6443", "name": "元晶", "market": "TWSE", "price": 28.4, "balance": 13017, "ratio": 101.0}, {"code": "6173", "name": "信昌電", "market": "TPEX", "price": 175.0, "balance": 7746, "ratio": 108.2}, {"code": "2489", "name": "瑞軒", "market": "TWSE", "price": 30.65, "balance": 34182, "ratio": 112.6}, {"code": "2485", "name": "兆赫", "market": "TWSE", "price": 41.25, "balance": 13589, "ratio": 113.9}, {"code": "2492", "name": "華新科", "market": "TWSE", "price": 273.0, "balance": 9610, "ratio": 122.0}, {"code": "3105", "name": "穩懋", "market": "TPEX", "price": 339.5, "balance": 45211, "ratio": 123.7}, {"code": "2355", "name": "敬鵬", "market": "TWSE", "price": 42.55, "balance": 10602, "ratio": 124.8}, {"code": "8358", "name": "金居", "market": "TPEX", "price": 394.5, "balance": 14557, "ratio": 126.1}, {"code": "3714", "name": "富采", "market": "TWSE", "price": 52.3, "balance": 27925, "ratio": 127.5}, {"code": "2367", "name": "燿華", "market": "TWSE", "price": 43.85, "balance": 31348, "ratio": 128.0}, {"code": "5425", "name": "台半", "market": "TPEX", "price": 89.5, "balance": 11690, "ratio": 128.2}, {"code": "3529", "name": "力旺", "market": "TPEX", "price": 2365.0, "balance": 986, "ratio": 130.3}, {"code": "3691", "name": "碩禾", "market": "TPEX", "price": 117.5, "balance": 3051, "ratio": 130.5}, {"code": "1802", "name": "台玻", "market": "TWSE", "price": 54.1, "balance": 46444, "ratio": 131.1}, {"code": "8299", "name": "群聯", "market": "TPEX", "price": 1855.0, "balance": 12077, "ratio": 132.7}, {"code": "8086", "name": "宏捷科", "market": "TPEX", "price": 119.5, "balance": 9127, "ratio": 132.8}, {"code": "6147", "name": "頎邦", "market": "TPEX", "price": 173.0, "balance": 40286, "ratio": 133.2}, {"code": "2337", "name": "旺宏", "market": "TWSE", "price": 123.0, "balance": 94065, "ratio": 133.8}, {"code": "6269", "name": "台郡", "market": "TWSE", "price": 55.9, "balance": 10160, "ratio": 133.9}, {"code": "4919", "name": "新唐", "market": "TWSE", "price": 141.0, "balance": 15938, "ratio": 134.0}, {"code": "2481", "name": "強茂", "market": "TWSE", "price": 143.5, "balance": 11823, "ratio": 134.2}, {"code": "3673", "name": "TPK-KY", "market": "TWSE", "price": 63.6, "balance": 16260, "ratio": 134.4}, {"code": "8163", "name": "達方", "market": "TWSE", "price": 32.7, "balance": 2627, "ratio": 135.5}, {"code": "3042", "name": "晶技", "market": "TWSE", "price": 168.0, "balance": 12436, "ratio": 135.8}, {"code": "6271", "name": "同欣電", "market": "TWSE", "price": 200.5, "balance": 7206, "ratio": 136.2}, {"code": "6116", "name": "彩晶", "market": "TWSE", "price": 14.5, "balance": 36902, "ratio": 136.6}, {"code": "6153", "name": "嘉聯益", "market": "TWSE", "price": 17.0, "balance": 14302, "ratio": 136.6}, {"code": "3481", "name": "群創", "market": "TWSE", "price": 50.7, "balance": 384356, "ratio": 136.7}, {"code": "1717", "name": "長興", "market": "TWSE", "price": 63.2, "balance": 20750, "ratio": 137.5}, {"code": "3044", "name": "健鼎", "market": "TWSE", "price": 404.5, "balance": 6134, "ratio": 137.6}, {"code": "2455", "name": "全新", "market": "TWSE", "price": 295.0, "balance": 8767, "ratio": 137.6}, {"code": "2457", "name": "飛宏", "market": "TWSE", "price": 24.3, "balance": 15258, "ratio": 137.6}, {"code": "6239", "name": "力成", "market": "TWSE", "price": 272.0, "balance": 21850, "ratio": 139.0}, {"code": "6278", "name": "台表科", "market": "TWSE", "price": 167.0, "balance": 10409, "ratio": 139.2}, {"code": "6282", "name": "康舒", "market": "TWSE", "price": 48.5, "balance": 29784, "ratio": 140.1}, {"code": "2340", "name": "台亞", "market": "TWSE", "price": 31.25, "balance": 9346, "ratio": 140.2}, {"code": "2327", "name": "國巨*", "market": "TWSE", "price": 670.0, "balance": 42879, "ratio": 141.2}, {"code": "3661", "name": "世芯-KY", "market": "TWSE", "price": 3490.0, "balance": 5871, "ratio": 141.2}, {"code": "3081", "name": "聯亞", "market": "TPEX", "price": 1515.0, "balance": 4267, "ratio": 141.3}, {"code": "5457", "name": "宣德", "market": "TPEX", "price": 30.35, "balance": 5908, "ratio": 141.6}, {"code": "6510", "name": "精測", "market": "TPEX", "price": 2645.0, "balance": 695, "ratio": 141.9}, {"code": "2344", "name": "華邦電", "market": "TWSE", "price": 155.5, "balance": 139838, "ratio": 142.2}, {"code": "6290", "name": "良維", "market": "TPEX", "price": 247.0, "balance": 11717, "ratio": 142.7}, {"code": "2329", "name": "華泰", "market": "TWSE", "price": 45.2, "balance": 16158, "ratio": 143.0}, {"code": "6182", "name": "合晶", "market": "TPEX", "price": 130.0, "balance": 72356, "ratio": 143.1}, {"code": "5347", "name": "世界", "market": "TPEX", "price": 155.5, "balance": 17388, "ratio": 143.9}, {"code": "4958", "name": "臻鼎-KY", "market": "TWSE", "price": 509.0, "balance": 27799, "ratio": 144.1}, {"code": "1319", "name": "東陽", "market": "TWSE", "price": 73.6, "balance": 6939, "ratio": 144.1}, {"code": "3036", "name": "文曄", "market": "TWSE", "price": 196.0, "balance": 14479, "ratio": 144.2}, {"code": "2338", "name": "光罩", "market": "TWSE", "price": 42.9, "balance": 6376, "ratio": 144.6}, {"code": "3406", "name": "玉晶光", "market": "TWSE", "price": 531.0, "balance": 2651, "ratio": 144.8}, {"code": "2409", "name": "友達", "market": "TWSE", "price": 25.6, "balance": 211597, "ratio": 144.9}, {"code": "6770", "name": "力積電", "market": "TWSE", "price": 65.1, "balance": 157431, "ratio": 144.9}, {"code": "6526", "name": "達發", "market": "TWSE", "price": 584.0, "balance": 1532, "ratio": 145.3}, {"code": "2328", "name": "廣宇", "market": "TWSE", "price": 46.6, "balance": 18476, "ratio": 145.3}, {"code": "3006", "name": "晶豪科", "market": "TWSE", "price": 199.5, "balance": 18134, "ratio": 145.7}, {"code": "3552", "name": "同致", "market": "TPEX", "price": 45.5, "balance": 1568, "ratio": 146.6}, {"code": "2303", "name": "聯電", "market": "TWSE", "price": 134.5, "balance": 220752, "ratio": 146.7}, {"code": "3260", "name": "威剛", "market": "TPEX", "price": 368.5, "balance": 22501, "ratio": 147.2}, {"code": "4743", "name": "合一", "market": "TPEX", "price": 47.8, "balance": 14111, "ratio": 147.5}, {"code": "6188", "name": "廣明", "market": "TPEX", "price": 71.5, "balance": 8966, "ratio": 147.6}, {"code": "6005", "name": "群益證", "market": "TWSE", "price": 33.6, "balance": 5138, "ratio": 147.7}, {"code": "1905", "name": "華紙", "market": "TWSE", "price": 14.15, "balance": 12207, "ratio": 148.0}, {"code": "2486", "name": "一詮", "market": "TWSE", "price": 218.5, "balance": 23598, "ratio": 148.3}, {"code": "2313", "name": "華通", "market": "TWSE", "price": 210.0, "balance": 41524, "ratio": 148.6}, {"code": "3037", "name": "欣興", "market": "TWSE", "price": 825.0, "balance": 40356, "ratio": 148.6}, {"code": "3211", "name": "順達", "market": "TPEX", "price": 380.0, "balance": 11876, "ratio": 148.8}, {"code": "2353", "name": "宏碁", "market": "TWSE", "price": 30.2, "balance": 40819, "ratio": 149.4}, {"code": "2368", "name": "金像電", "market": "TWSE", "price": 980.0, "balance": 4622, "ratio": 149.9}, {"code": "8044", "name": "網家", "market": "TPEX", "price": 27.1, "balance": 3750, "ratio": 150.1}, {"code": "1605", "name": "華新", "market": "TWSE", "price": 32.95, "balance": 52518, "ratio": 150.1}, {"code": "2421", "name": "建準", "market": "TWSE", "price": 128.5, "balance": 5381, "ratio": 150.3}, {"code": "6257", "name": "矽格", "market": "TWSE", "price": 216.0, "balance": 9934, "ratio": 150.4}, {"code": "3380", "name": "明泰", "market": "TWSE", "price": 30.35, "balance": 5451, "ratio": 150.4}, {"code": "2474", "name": "可成", "market": "TWSE", "price": 191.0, "balance": 10091, "ratio": 150.6}, {"code": "4128", "name": "中天", "market": "TPEX", "price": 15.45, "balance": 8363, "ratio": 150.7}, {"code": "2449", "name": "京元電子", "market": "TWSE", "price": 279.0, "balance": 20139, "ratio": 150.8}, {"code": "6176", "name": "瑞儀", "market": "TWSE", "price": 84.7, "balance": 6977, "ratio": 151.0}, {"code": "1314", "name": "中石化", "market": "TWSE", "price": 8.45, "balance": 78172, "ratio": 151.1}, {"code": "2454", "name": "聯發科", "market": "TWSE", "price": 3670.0, "balance": 9548, "ratio": 151.6}, {"code": "1718", "name": "中纖", "market": "TWSE", "price": 13.2, "balance": 15755, "ratio": 151.6}, {"code": "2458", "name": "義隆", "market": "TWSE", "price": 165.5, "balance": 3555, "ratio": 151.8}, {"code": "1504", "name": "東元", "market": "TWSE", "price": 67.2, "balance": 31010, "ratio": 151.9}, {"code": "2356", "name": "英業達", "market": "TWSE", "price": 60.1, "balance": 29808, "ratio": 152.2}, {"code": "3443", "name": "創意", "market": "TWSE", "price": 4115.0, "balance": 4241, "ratio": 152.3}, {"code": "2382", "name": "廣達", "market": "TWSE", "price": 324.0, "balance": 12685, "ratio": 152.4}, {"code": "2515", "name": "中工", "market": "TWSE", "price": 12.3, "balance": 26081, "ratio": 152.7}, {"code": "2404", "name": "漢唐", "market": "TWSE", "price": 1150.0, "balance": 2350, "ratio": 152.7}, {"code": "2308", "name": "台達電", "market": "TWSE", "price": 1835.0, "balance": 7786, "ratio": 152.8}, {"code": "6285", "name": "啟碁", "market": "TWSE", "price": 245.0, "balance": 15987, "ratio": 152.8}, {"code": "2441", "name": "超豐", "market": "TWSE", "price": 124.5, "balance": 8556, "ratio": 153.2}, {"code": "2498", "name": "宏達電", "market": "TWSE", "price": 41.85, "balance": 29529, "ratio": 153.8}, {"code": "3324", "name": "雙鴻", "market": "TPEX", "price": 926.0, "balance": 4986, "ratio": 154.1}, {"code": "1608", "name": "華榮", "market": "TWSE", "price": 31.8, "balance": 8391, "ratio": 154.3}, {"code": "3680", "name": "家登", "market": "TPEX", "price": 481.0, "balance": 3966, "ratio": 154.5}, {"code": "3019", "name": "亞光", "market": "TWSE", "price": 137.5, "balance": 11875, "ratio": 154.7}, {"code": "3376", "name": "新日興", "market": "TWSE", "price": 189.5, "balance": 12745, "ratio": 154.8}, {"code": "3034", "name": "聯詠", "market": "TWSE", "price": 476.0, "balance": 2832, "ratio": 154.8}, {"code": "2049", "name": "上銀", "market": "TWSE", "price": 305.0, "balance": 3529, "ratio": 154.9}, {"code": "643", "name": "群益深証中小ETF", "market": "TWSE", "price": 18.92, "balance": 949, "ratio": 155.0}, {"code": "2323", "name": "中環", "market": "TWSE", "price": 10.5, "balance": 29517, "ratio": 155.0}, {"code": "1795", "name": "美時", "market": "TWSE", "price": 190.5, "balance": 8914, "ratio": 155.1}, {"code": "2352", "name": "佳世達", "market": "TWSE", "price": 30.65, "balance": 16358, "ratio": 155.2}, {"code": "5483", "name": "中美晶", "market": "TPEX", "price": 220.5, "balance": 15208, "ratio": 155.3}, {"code": "3189", "name": "景碩", "market": "TWSE", "price": 746.0, "balance": 17472, "ratio": 155.9}, {"code": "2885", "name": "元大金", "market": "TWSE", "price": 61.3, "balance": 3449, "ratio": 156.0}, {"code": "2439", "name": "美律", "market": "TWSE", "price": 84.7, "balance": 3623, "ratio": 156.5}, {"code": "2312", "name": "金寶", "market": "TWSE", "price": 33.1, "balance": 47820, "ratio": 156.6}, {"code": "8112", "name": "至上", "market": "TWSE", "price": 86.2, "balance": 18479, "ratio": 156.7}, {"code": "1609", "name": "大亞", "market": "TWSE", "price": 37.55, "balance": 13505, "ratio": 156.7}, {"code": "1503", "name": "士電", "market": "TWSE", "price": 207.5, "balance": 3009, "ratio": 156.8}, {"code": "3152", "name": "璟德", "market": "TPEX", "price": 228.5, "balance": 693, "ratio": 156.9}, {"code": "1536", "name": "和大", "market": "TWSE", "price": 50.5, "balance": 8321, "ratio": 157.0}, {"code": "1440", "name": "南紡", "market": "TWSE", "price": 13.0, "balance": 5629, "ratio": 157.0}, {"code": "6472", "name": "保瑞", "market": "TWSE", "price": 401.0, "balance": 3588, "ratio": 157.3}, {"code": "3227", "name": "原相", "market": "TPEX", "price": 193.0, "balance": 3408, "ratio": 157.3}, {"code": "2385", "name": "群光", "market": "TWSE", "price": 104.5, "balance": 3269, "ratio": 157.5}, {"code": "2408", "name": "南亞科", "market": "TWSE", "price": 405.0, "balance": 89048, "ratio": 157.5}, {"code": "3008", "name": "大立光", "market": "TWSE", "price": 3985.0, "balance": 1859, "ratio": 157.6}, {"code": "6488", "name": "環球晶", "market": "TPEX", "price": 1205.0, "balance": 9849, "ratio": 157.8}, {"code": "8069", "name": "元太", "market": "TPEX", "price": 193.0, "balance": 8538, "ratio": 158.1}, {"code": "929", "name": "復華台灣科技優息ETF", "market": "TWSE", "price": 28.27, "balance": 6024, "ratio": 158.1}, {"code": "5904", "name": "寶雅", "market": "TPEX", "price": 633.0, "balance": 492, "ratio": 158.3}, {"code": "6139", "name": "亞翔", "market": "TWSE", "price": 815.0, "balance": 7645, "ratio": 158.3}, {"code": "3078", "name": "僑威", "market": "TPEX", "price": 53.2, "balance": 5967, "ratio": 158.6}, {"code": "6121", "name": "新普", "market": "TPEX", "price": 370.5, "balance": 539, "ratio": 158.7}, {"code": "1904", "name": "正隆", "market": "TWSE", "price": 21.5, "balance": 4535, "ratio": 158.8}, {"code": "8150", "name": "南茂", "market": "TWSE", "price": 104.0, "balance": 25338, "ratio": 159.0}, {"code": "5269", "name": "祥碩", "market": "TWSE", "price": 1410.0, "balance": 2111, "ratio": 159.2}, {"code": "2324", "name": "仁寶", "market": "TWSE", "price": 36.0, "balance": 57722, "ratio": 159.2}, {"code": "6274", "name": "台燿", "market": "TPEX", "price": 1235.0, "balance": 7319, "ratio": 159.4}, {"code": "1513", "name": "中興電", "market": "TWSE", "price": 162.5, "balance": 7899, "ratio": 159.4}, {"code": "2354", "name": "鴻準", "market": "TWSE", "price": 55.2, "balance": 25746, "ratio": 159.6}, {"code": "2231", "name": "為升", "market": "TWSE", "price": 112.0, "balance": 2855, "ratio": 159.6}, {"code": "2331", "name": "精英", "market": "TWSE", "price": 20.0, "balance": 10215, "ratio": 159.7}, {"code": "56", "name": "元大高股息ETF", "market": "TWSE", "price": 49.55, "balance": 10531, "ratio": 159.8}, {"code": "5274", "name": "信驊", "market": "TPEX", "price": 14100.0, "balance": 145, "ratio": 160.0}, {"code": "2301", "name": "光寶科", "market": "TWSE", "price": 207.0, "balance": 17548, "ratio": 160.1}, {"code": "2347", "name": "聯強", "market": "TWSE", "price": 85.3, "balance": 661, "ratio": 160.4}, {"code": "6547", "name": "高端疫苗", "market": "TPEX", "price": 46.65, "balance": 10791, "ratio": 160.5}, {"code": "4123", "name": "晟德", "market": "TPEX", "price": 38.05, "balance": 11345, "ratio": 160.5}, {"code": "8046", "name": "南電", "market": "TWSE", "price": 1190.0, "balance": 10698, "ratio": 160.6}, {"code": "6757", "name": "台灣虎航", "market": "TWSE", "price": 58.6, "balance": 3481, "ratio": 160.9}, {"code": "6245", "name": "立端", "market": "TPEX", "price": 79.5, "balance": 2753, "ratio": 161.1}, {"code": "2401", "name": "凌陽", "market": "TWSE", "price": 27.6, "balance": 8490, "ratio": 161.2}, {"code": "9904", "name": "寶成", "market": "TWSE", "price": 24.4, "balance": 26859, "ratio": 161.5}, {"code": "5371", "name": "中光電", "market": "TPEX", "price": 89.5, "balance": 21550, "ratio": 161.5}, {"code": "1312", "name": "國喬", "market": "TWSE", "price": 13.25, "balance": 29548, "ratio": 161.6}, {"code": "923", "name": "群益台ESG低碳50ETF", "market": "TWSE", "price": 40.47, "balance": 209, "ratio": 162.0}, {"code": "1102", "name": "亞泥", "market": "TWSE", "price": 33.15, "balance": 1329, "ratio": 162.0}, {"code": "2548", "name": "華固", "market": "TWSE", "price": 102.0, "balance": 2284, "ratio": 162.2}, {"code": "3711", "name": "日月光投控", "market": "TWSE", "price": 633.0, "balance": 11636, "ratio": 162.2}, {"code": "893", "name": "國泰智能電動車ETF", "market": "TWSE", "price": 44.38, "balance": 70, "ratio": 162.3}, {"code": "3653", "name": "健策", "market": "TWSE", "price": 3520.0, "balance": 2441, "ratio": 162.3}, {"code": "2891", "name": "中信金", "market": "TWSE", "price": 62.7, "balance": 4268, "ratio": 162.4}, {"code": "4938", "name": "和碩", "market": "TWSE", "price": 82.8, "balance": 5137, "ratio": 162.5}, {"code": "940", "name": "元大台灣價值高息ETF", "market": "TWSE", "price": 12.1, "balance": 1573, "ratio": 162.6}, {"code": "1565", "name": "精華", "market": "TPEX", "price": 94.0, "balance": 1060, "ratio": 162.7}, {"code": "2393", "name": "億光", "market": "TWSE", "price": 67.5, "balance": 2719, "ratio": 162.8}, {"code": "2913", "name": "農林", "market": "TWSE", "price": 11.35, "balance": 7080, "ratio": 163.2}, {"code": "1477", "name": "聚陽", "market": "TWSE", "price": 218.0, "balance": 1543, "ratio": 163.5}, {"code": "2332", "name": "友訊", "market": "TWSE", "price": 22.3, "balance": 24380, "ratio": 163.7}, {"code": "919", "name": "群益台灣精選高息ETF", "market": "TWSE", "price": 29.0, "balance": 8012, "ratio": 163.8}, {"code": "2345", "name": "智邦", "market": "TWSE", "price": 2220.0, "balance": 1417, "ratio": 163.8}, {"code": "5009", "name": "榮剛", "market": "TPEX", "price": 33.7, "balance": 8225, "ratio": 163.8}, {"code": "3264", "name": "欣銓", "market": "TPEX", "price": 210.0, "balance": 5982, "ratio": 164.1}, {"code": "1722", "name": "台肥", "market": "TWSE", "price": 47.1, "balance": 2653, "ratio": 164.1}, {"code": "2379", "name": "瑞昱", "market": "TWSE", "price": 753.0, "balance": 2755, "ratio": 164.1}, {"code": "2002", "name": "中鋼", "market": "TWSE", "price": 18.8, "balance": 44973, "ratio": 164.4}, {"code": "2887", "name": "台新新光金", "market": "TWSE", "price": 34.7, "balance": 42768, "ratio": 164.4}, {"code": "2881", "name": "富邦金", "market": "TWSE", "price": 123.5, "balance": 7122, "ratio": 164.5}, {"code": "2610", "name": "華航", "market": "TWSE", "price": 21.45, "balance": 50525, "ratio": 164.7}, {"code": "52", "name": "富邦科技ETF", "market": "TWSE", "price": 60.3, "balance": 12222, "ratio": 164.7}, {"code": "3293", "name": "鈊象", "market": "TPEX", "price": 718.0, "balance": 2779, "ratio": 164.8}, {"code": "878", "name": "國泰永續高股息ETF", "market": "TWSE", "price": 32.05, "balance": 2695, "ratio": 164.9}, {"code": "9958", "name": "世紀鋼", "market": "TWSE", "price": 115.0, "balance": 8804, "ratio": 164.9}, {"code": "6205", "name": "富邦上証ETF", "market": "TWSE", "price": 40.83, "balance": 78, "ratio": 165.0}, {"code": "885", "name": "富邦越南ETF", "market": "TWSE", "price": 17.82, "balance": 796, "ratio": 165.1}, {"code": "1301", "name": "台塑", "market": "TWSE", "price": 63.0, "balance": 26402, "ratio": 165.1}, {"code": "4162", "name": "智擎", "market": "TPEX", "price": 68.0, "balance": 2883, "ratio": 165.2}, {"code": "2883", "name": "凱基金", "market": "TWSE", "price": 29.7, "balance": 16358, "ratio": 165.4}, {"code": "5388", "name": "中磊", "market": "TWSE", "price": 85.1, "balance": 5633, "ratio": 165.5}, {"code": "3702", "name": "大聯大", "market": "TWSE", "price": 111.5, "balance": 6691, "ratio": 165.6}, {"code": "1210", "name": "大成", "market": "TWSE", "price": 57.5, "balance": 620, "ratio": 165.7}, {"code": "2388", "name": "威盛", "market": "TWSE", "price": 72.2, "balance": 11578, "ratio": 165.9}, {"code": "2882", "name": "國泰金", "market": "TWSE", "price": 95.8, "balance": 4872, "ratio": 166.0}, {"code": "1402", "name": "遠東新", "market": "TWSE", "price": 27.35, "balance": 7515, "ratio": 166.0}, {"code": "1303", "name": "南亞", "market": "TWSE", "price": 195.5, "balance": 45395, "ratio": 166.1}, {"code": "2609", "name": "陽明", "market": "TWSE", "price": 50.9, "balance": 33986, "ratio": 166.2}, {"code": "1101", "name": "台泥", "market": "TWSE", "price": 24.05, "balance": 33054, "ratio": 166.2}, {"code": "6213", "name": "聯茂", "market": "TWSE", "price": 354.5, "balance": 16312, "ratio": 166.3}, {"code": "2520", "name": "冠德", "market": "TWSE", "price": 35.7, "balance": 2986, "ratio": 166.3}, {"code": "3017", "name": "奇鋐", "market": "TWSE", "price": 2320.0, "balance": 4647, "ratio": 166.4}, {"code": "2618", "name": "長榮航", "market": "TWSE", "price": 42.3, "balance": 28204, "ratio": 166.6}, {"code": "4904", "name": "遠傳", "market": "TWSE", "price": 102.0, "balance": 378, "ratio": 166.6}, {"code": "2027", "name": "大成鋼", "market": "TWSE", "price": 41.15, "balance": 24873, "ratio": 166.7}, {"code": "1216", "name": "統一", "market": "TWSE", "price": 79.6, "balance": 491, "ratio": 166.8}, {"code": "2376", "name": "技嘉", "market": "TWSE", "price": 341.0, "balance": 7443, "ratio": 166.8}, {"code": "2915", "name": "潤泰全", "market": "TWSE", "price": 52.0, "balance": 8588, "ratio": 166.8}, {"code": "3231", "name": "緯創", "market": "TWSE", "price": 149.5, "balance": 51362, "ratio": 167.0}, {"code": "2317", "name": "鴻海", "market": "TWSE", "price": 246.0, "balance": 55619, "ratio": 167.2}, {"code": "6279", "name": "胡連", "market": "TPEX", "price": 118.0, "balance": 2983, "ratio": 167.2}, {"code": "8436", "name": "大江", "market": "TPEX", "price": 115.5, "balance": 1146, "ratio": 167.2}, {"code": "2633", "name": "台灣高鐵", "market": "TWSE", "price": 26.1, "balance": 1771, "ratio": 167.3}, {"code": "2059", "name": "川湖", "market": "TWSE", "price": 7975.0, "balance": 467, "ratio": 167.3}, {"code": "2605", "name": "新興", "market": "TWSE", "price": 31.05, "balance": 12582, "ratio": 167.4}, {"code": "2371", "name": "大同", "market": "TWSE", "price": 26.65, "balance": 50639, "ratio": 167.5}, {"code": "2330", "name": "台積電", "market": "TWSE", "price": 2410.0, "balance": 31823, "ratio": 167.6}, {"code": "4736", "name": "泰博", "market": "TWSE", "price": 130.0, "balance": 213, "ratio": 167.7}, {"code": "2392", "name": "正崴", "market": "TWSE", "price": 35.35, "balance": 4713, "ratio": 167.7}, {"code": "2412", "name": "中華電", "market": "TWSE", "price": 139.0, "balance": 2828, "ratio": 167.7}, {"code": "2105", "name": "正新", "market": "TWSE", "price": 32.25, "balance": 8988, "ratio": 167.7}, {"code": "3665", "name": "貿聯-KY", "market": "TWSE", "price": 2000.0, "balance": 3099, "ratio": 167.8}, {"code": "2890", "name": "永豐金", "market": "TWSE", "price": 40.2, "balance": 2550, "ratio": 167.9}, {"code": "2834", "name": "臺企銀", "market": "TWSE", "price": 18.0, "balance": 6914, "ratio": 168.0}, {"code": "1560", "name": "中砂", "market": "TWSE", "price": 676.0, "balance": 1726, "ratio": 168.0}, {"code": "9914", "name": "美利達", "market": "TWSE", "price": 80.4, "balance": 2856, "ratio": 168.1}, {"code": "3035", "name": "智原", "market": "TWSE", "price": 194.5, "balance": 11353, "ratio": 168.1}, {"code": "1909", "name": "榮成", "market": "TWSE", "price": 10.15, "balance": 9898, "ratio": 168.1}, {"code": "5534", "name": "長虹", "market": "TWSE", "price": 80.9, "balance": 3589, "ratio": 168.1}, {"code": "757", "name": "統一FANG+ETF", "market": "TWSE", "price": 132.5, "balance": 245, "ratio": 168.3}, {"code": "636", "name": "國泰中國A50ETF", "market": "TWSE", "price": 28.84, "balance": 150, "ratio": 168.4}, {"code": "2606", "name": "裕民", "market": "TWSE", "price": 63.0, "balance": 3254, "ratio": 168.4}, {"code": "3045", "name": "台灣大", "market": "TWSE", "price": 112.0, "balance": 303, "ratio": 168.5}, {"code": "639", "name": "富邦深100ETF", "market": "TWSE", "price": 17.39, "balance": 478, "ratio": 168.6}, {"code": "2201", "name": "裕隆", "market": "TWSE", "price": 28.45, "balance": 10061, "ratio": 168.6}, {"code": "6669", "name": "緯穎", "market": "TWSE", "price": 5000.0, "balance": 1643, "ratio": 168.6}, {"code": "2886", "name": "兆豐金", "market": "TWSE", "price": 48.6, "balance": 604, "ratio": 168.7}, {"code": "2542", "name": "興富發", "market": "TWSE", "price": 44.1, "balance": 5702, "ratio": 168.9}, {"code": "3706", "name": "神達", "market": "TWSE", "price": 91.3, "balance": 31951, "ratio": 169.0}, {"code": "5871", "name": "中租-KY", "market": "TWSE", "price": 123.5, "balance": 3988, "ratio": 169.3}, {"code": "6223", "name": "旺矽", "market": "TPEX", "price": 5875.0, "balance": 1016, "ratio": 169.3}, {"code": "1590", "name": "亞德客-KY", "market": "TWSE", "price": 1360.0, "balance": 112, "ratio": 169.9}, {"code": "2357", "name": "華碩", "market": "TWSE", "price": 736.0, "balance": 2269, "ratio": 170.0}, {"code": "9945", "name": "潤泰新", "market": "TWSE", "price": 26.65, "balance": 21112, "ratio": 170.0}, {"code": "50", "name": "元大台灣50ETF", "market": "TWSE", "price": 102.5, "balance": 57630, "ratio": 170.1}, {"code": "2383", "name": "台光電", "market": "TWSE", "price": 4830.0, "balance": 1707, "ratio": 170.2}, {"code": "1326", "name": "台化", "market": "TWSE", "price": 68.6, "balance": 37826, "ratio": 170.3}, {"code": "3533", "name": "嘉澤", "market": "TWSE", "price": 2030.0, "balance": 578, "ratio": 171.2}, {"code": "2360", "name": "致茂", "market": "TWSE", "price": 2015.0, "balance": 1291, "ratio": 171.3}, {"code": "6206", "name": "元大上證50ETF", "market": "TWSE", "price": 38.18, "balance": 8, "ratio": 171.3}, {"code": "3005", "name": "神基", "market": "TWSE", "price": 116.5, "balance": 8727, "ratio": 171.3}, {"code": "1476", "name": "儒鴻", "market": "TWSE", "price": 343.5, "balance": 924, "ratio": 171.5}, {"code": "2880", "name": "華南金", "market": "TWSE", "price": 40.8, "balance": 499, "ratio": 171.9}, {"code": "2377", "name": "微星", "market": "TWSE", "price": 146.0, "balance": 13315, "ratio": 172.1}, {"code": "2006", "name": "東和鋼鐵", "market": "TWSE", "price": 71.5, "balance": 1048, "ratio": 172.3}, {"code": "9938", "name": "百和", "market": "TWSE", "price": 47.6, "balance": 3495, "ratio": 172.7}, {"code": "3532", "name": "台勝科", "market": "TWSE", "price": 433.5, "balance": 9126, "ratio": 173.1}, {"code": "5880", "name": "合庫金", "market": "TWSE", "price": 25.7, "balance": 1934, "ratio": 173.5}, {"code": "9939", "name": "宏全", "market": "TWSE", "price": 132.5, "balance": 1272, "ratio": 173.9}, {"code": "2615", "name": "萬海", "market": "TWSE", "price": 85.2, "balance": 17628, "ratio": 174.2}, {"code": "5876", "name": "上海商銀", "market": "TWSE", "price": 45.65, "balance": 673, "ratio": 174.5}, {"code": "2603", "name": "長榮", "market": "TWSE", "price": 203.0, "balance": 15513, "ratio": 175.2}, {"code": "2884", "name": "玉山金", "market": "TWSE", "price": 36.95, "balance": 5941, "ratio": 175.7}, {"code": "2892", "name": "第一金", "market": "TWSE", "price": 34.45, "balance": 2216, "ratio": 176.9}, {"code": "2801", "name": "彰銀", "market": "TWSE", "price": 24.3, "balance": 6822, "ratio": 177.0}, {"code": "2395", "name": "研華", "market": "TWSE", "price": 567.0, "balance": 2065, "ratio": 177.1}, {"code": "6505", "name": "台塑化", "market": "TWSE", "price": 85.4, "balance": 16607, "ratio": 178.1}, {"code": "1907", "name": "永豐餘", "market": "TWSE", "price": 28.2, "balance": 24224, "ratio": 178.9}, {"code": "3374", "name": "精材", "market": "TPEX", "price": 380.0, "balance": 28491, "ratio": 179.1}, {"code": "6414", "name": "樺漢", "market": "TWSE", "price": 445.5, "balance": 2197, "ratio": 179.1}, {"code": "2634", "name": "漢翔", "market": "TWSE", "price": 71.5, "balance": 26286, "ratio": 179.4}, {"code": "8039", "name": "台虹", "market": "TWSE", "price": 212.0, "balance": 22286, "ratio": 189.7}];
+
+const RISK = {
+  danger: { max: 100, color: 'var(--danger)', key: 'danger' },
+  warn: { max: 130, color: 'var(--warn)', key: 'warn' },
+  safe: { max: Infinity, color: 'var(--safe)', key: 'safe' },
+};
+
+function riskOf(ratio) {
+  if (ratio < 100) return 'danger';
+  if (ratio < 130) return 'warn';
+  return 'safe';
+}
+
+function fmt(n, digits) {
+  return n.toLocaleString('en-US', { minimumFractionDigits: digits, maximumFractionDigits: digits });
+}
+
+function renderSummary() {
+  const total = DATA.length;
+  const danger = DATA.filter(d => riskOf(d.ratio) === 'danger').length;
+  const warn = DATA.filter(d => riskOf(d.ratio) === 'warn').length;
+  const safe = total - danger - warn;
+
+  const strip = document.getElementById('summaryStrip');
+  strip.innerHTML = `
+    <div class="summary-cell">
+      <div class="num mono">${total}</div>
+      <div class="label">追蹤檔數</div>
+    </div>
+    <div class="summary-cell danger">
+      <div class="num mono">${danger}</div>
+      <div class="label">維持率 &lt; 100%</div>
+    </div>
+    <div class="summary-cell warn">
+      <div class="num mono">${warn}</div>
+      <div class="label">100% ~ 130%</div>
+    </div>
+    <div class="summary-cell safe">
+      <div class="num mono">${safe}</div>
+      <div class="label">&gt; 130%（安全）</div>
+    </div>
+  `;
+
+  const bar = document.getElementById('distBar');
+  bar.innerHTML = `
+    <div class="dist-seg" style="width:${danger/total*100}%;background:var(--danger)"></div>
+    <div class="dist-seg" style="width:${warn/total*100}%;background:var(--warn)"></div>
+    <div class="dist-seg" style="width:${safe/total*100}%;background:var(--safe)"></div>
+  `;
+  document.getElementById('distLegend').innerHTML = `
+    <span><i style="background:var(--danger)"></i>危險（&lt;100%）</span>
+    <span><i style="background:var(--warn)"></i>警戒（100~130%）</span>
+    <span><i style="background:var(--safe)"></i>安全（&gt;130%）</span>
+  `;
+}
+
+let sortKey = 'ratio';
+let sortAsc = true;
+let marketFilter = 'all';
+let riskFilter = null;
+let searchTerm = '';
+
+function applyFilters() {
+  let rows = DATA.slice();
+  if (marketFilter !== 'all') rows = rows.filter(d => d.market === marketFilter);
+  if (riskFilter) rows = rows.filter(d => riskOf(d.ratio) === riskFilter);
+  if (searchTerm) {
+    const t = searchTerm.toLowerCase();
+    rows = rows.filter(d => d.code.toLowerCase().includes(t) || d.name.toLowerCase().includes(t));
+  }
+  rows.sort((a, b) => {
+    let av = a[sortKey], bv = b[sortKey];
+    if (typeof av === 'string') { av = av.toLowerCase(); bv = bv.toLowerCase(); }
+    if (av < bv) return sortAsc ? -1 : 1;
+    if (av > bv) return sortAsc ? 1 : -1;
+    return 0;
+  });
+  return rows;
+}
+
+function renderTable() {
+  const rows = applyFilters();
+  const tbody = document.getElementById('tableBody');
+  const emptyState = document.getElementById('emptyState');
+  document.getElementById('countNote').textContent = `顯示 ${rows.length} / ${DATA.length} 檔`;
+
+  if (rows.length === 0) {
+    tbody.innerHTML = '';
+    emptyState.style.display = 'block';
+    return;
+  }
+  emptyState.style.display = 'none';
+
+  tbody.innerHTML = rows.map(d => {
+    const risk = riskOf(d.ratio);
+    const marketLabel = d.market === 'TWSE' ? 'TWSE' : 'TPEX';
+    return `
+      <tr>
+        <td class="stripe"><div style="background:var(--${risk === 'danger' ? 'danger' : risk === 'warn' ? 'warn' : 'safe'})"></div></td>
+        <td>
+          <div class="stock-name">${d.name}</div>
+          <div class="stock-code mono">${d.code}</div>
+        </td>
+        <td><span class="market-tag">${marketLabel}</span></td>
+        <td class="num-cell price mono">${fmt(d.price, 2)}</td>
+        <td class="num-cell mono">${fmt(d.balance, 0)}</td>
+        <td class="num-cell"><span class="ratio-pill ${risk} mono">${fmt(d.ratio, 1)}%</span></td>
+      </tr>
+    `;
+  }).join('');
+}
+
+document.querySelectorAll('thead th[data-key]').forEach(th => {
+  th.addEventListener('click', () => {
+    const key = th.dataset.key;
+    if (sortKey === key) { sortAsc = !sortAsc; } else { sortKey = key; sortAsc = true; }
+    document.querySelectorAll('thead th').forEach(h => h.classList.remove('active'));
+    th.classList.add('active');
+    renderTable();
+  });
+});
+
+document.querySelectorAll('.filter-chip[data-market]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-chip[data-market]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    marketFilter = btn.dataset.market;
+    renderTable();
+  });
+});
+
+document.querySelectorAll('.filter-chip[data-risk]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const isActive = btn.classList.contains('active');
+    document.querySelectorAll('.filter-chip[data-risk]').forEach(b => b.classList.remove('active'));
+    if (!isActive) {
+      btn.classList.add('active');
+      riskFilter = btn.dataset.risk;
+    } else {
+      riskFilter = null;
+    }
+    renderTable();
+  });
+});
+
+document.getElementById('searchInput').addEventListener('input', (e) => {
+  searchTerm = e.target.value.trim();
+  renderTable();
+});
+
+renderSummary();
+renderTable();
+</script>
+
+</body>
+</html>
