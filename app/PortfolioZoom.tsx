@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, type MouseEvent } from "react";
 
 type Props = {
   src: string;
@@ -20,15 +20,19 @@ export default function PortfolioZoom({
   const dialog = useRef<HTMLDialogElement>(null);
   const close = () => dialog.current?.close();
   // 開啟時鎖住背景捲動，關閉（含 Esc）時還原
-  const open = () => {
+  const open = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
     document.body.style.overflow = "hidden";
     dialog.current?.showModal();
   };
 
+  // 用連結當後備：靜態匯出版沒有 JS 時會直接開啟原圖
   return (
     <>
-      <button
-        type="button"
+      <a
+        href={src}
+        target="_blank"
+        rel="noopener"
         className="portfolio-zoom"
         onClick={open}
         aria-label={`放大檢視 ${title} 截圖`}
@@ -37,7 +41,7 @@ export default function PortfolioZoom({
         <span className="zoom-hint" aria-hidden="true">
           ⤢ 點擊放大
         </span>
-      </button>
+      </a>
       {/* 原生 dialog 支援 Esc 關閉與焦點鎖定；點背景也可關閉 */}
       <dialog
         ref={dialog}

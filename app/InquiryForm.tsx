@@ -66,7 +66,14 @@ export default function InquiryForm({ plans }: { plans: string[] }) {
   };
 
   return (
-    <form className="inquiry" onSubmit={onSubmit}>
+    // action 為沒有 JS 時（靜態匯出版）的後備：直接交給郵件程式
+    <form
+      className="inquiry"
+      onSubmit={onSubmit}
+      action={`mailto:${EMAIL}?subject=${encodeURIComponent(SUBJECT)}`}
+      method="post"
+      encType="text/plain"
+    >
       <p className="inquiry-title">預約導入診斷</p>
       <div className="inquiry-row">
         <label>
