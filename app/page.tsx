@@ -1,8 +1,13 @@
+import HeroDemo from "./HeroDemo";
+import InquiryForm from "./InquiryForm";
+import MobileMenu from "./MobileMenu";
+import PortfolioZoom from "./PortfolioZoom";
+
 // 報價金額只在這裡維護；價格卡、FAQ 與 JSON-LD 都由 plans 產生。
 const plans = [
-  { step: "STEP 01", amount: 15000, monthly: false, name: "導入診斷", offerName: "導入診斷", featured: false, desc: "先確認哪些流程值得導入、資料現況如何、預期能省下多少人力，再決定要不要做。費用可全額折抵後續導入專案。", faqNote: "費用可全額折抵後續導入專案", offerDesc: "流程盤點、資料現況與可行性評估、導入路線圖建議；費用可全額折抵後續導入專案。", items: ["1–2 次深度訪談與流程盤點", "資料現況與可行性評估", "導入優先順序建議", "導入路線圖與範圍建議書"] },
-  { step: "STEP 02", amount: 80000, monthly: false, name: "方案導入", offerName: "方案導入", featured: true, desc: "從規格、開發、串接到試營運上線的完整導入，交付可驗收的系統。單一場景的起價，依串接系統數量與介面需求調整。", faqNote: "為單一場景的完整導入起價", offerDesc: "單一場景的完整導入起價，含規格、開發、串接、試營運與三個月程式錯誤保固。", items: ["需求規格與驗收標準", "系統開發與既有系統串接", "小範圍試營運與回答調校", "操作說明與團隊教育訓練", "三個月程式錯誤保固"] },
-  { step: "STEP 03", amount: 5000, monthly: true, name: "持續維運", offerName: "持續維運（每月）", featured: false, desc: "上線之後才是開始。維持系統穩定、控制用量成本，並持續更新知識內容。三個月保固到期後開始計收。", faqNote: "自三個月保固到期後開始計收", offerDesc: "三個月保固到期後開始計收，涵蓋一般維護、用量監控與知識內容更新。", items: ["一般維護與運行協助", "用量與成本監控", "知識庫與提示內容更新", "新增功能另行報價"] },
+  { step: "STEP 01", amount: 15000, monthly: false, name: "導入診斷", offerName: "導入診斷", featured: false, cta: "預約導入診斷", desc: "先確認哪些流程值得導入、資料現況如何、預期能省下多少人力，再決定要不要做。費用可全額折抵後續導入專案。", faqNote: "費用可全額折抵後續導入專案", offerDesc: "流程盤點、資料現況與可行性評估、導入路線圖建議；費用可全額折抵後續導入專案。", items: ["1–2 次深度訪談與流程盤點", "資料現況與可行性評估", "導入優先順序建議", "導入路線圖與範圍建議書"] },
+  { step: "STEP 02", amount: 80000, monthly: false, name: "方案導入", offerName: "方案導入", featured: true, cta: "討論專案範圍", desc: "從規格、開發、串接到試營運上線的完整導入，交付可驗收的系統。單一場景的起價，依串接系統數量與介面需求調整。", faqNote: "為單一場景的完整導入起價", offerDesc: "單一場景的完整導入起價，含規格、開發、串接、試營運與三個月程式錯誤保固。", items: ["需求規格與驗收標準", "系統開發與既有系統串接", "小範圍試營運與回答調校", "操作說明與團隊教育訓練", "三個月程式錯誤保固"] },
+  { step: "STEP 03", amount: 5000, monthly: true, name: "持續維運", offerName: "持續維運（每月）", featured: false, cta: "詢問維運方案", desc: "上線之後才是開始。維持系統穩定、控制用量成本，並持續更新知識內容。三個月保固到期後開始計收。", faqNote: "自三個月保固到期後開始計收", offerDesc: "三個月保固到期後開始計收，涵蓋一般維護、用量監控與知識內容更新。", items: ["一般維護與運行協助", "用量與成本監控", "知識庫與提示內容更新", "新增功能另行報價"] },
 ];
 
 const CN_NUM = ["零", "一", "二", "三", "四", "五", "六"];
@@ -19,6 +24,13 @@ const services = [
   { no: "02", icon: "AGT", title: "流程自動化與 AI Agent", desc: "讓 AI 代理接手報表整理、資料比對、跨系統查詢等重複性工作，並保留失敗重試與人工審核關卡。", items: ["多步驟任務編排", "既有系統 API 串接", "執行紀錄與審核機制"] },
   { no: "03", icon: "BOT", title: "AI 客服與 LINE 機器人", desc: "串接 LINE 官方帳號或網站客服，自動回覆常見問題、收單與預約，判斷處理不了時轉接真人。", items: ["LINE OA／網頁掛件", "意圖判斷與轉真人", "對話紀錄與成效統計"] },
   { no: "04", icon: "ADV", title: "AI 顧問與教育訓練", desc: "協助盤點哪些流程適合導入、工具與模型怎麼選、導入順序怎麼排，並為內部團隊做實作訓練。", items: ["流程盤點與可行性評估", "工具與模型選型", "團隊實作工作坊"] },
+];
+
+// 示範情境：常見導入範例，非特定客戶案例
+const scenarios = [
+  { tag: "製造業", title: "產品規格與 ISO 文件知識庫", pain: "業務與品管每天翻找共用資料夾裡的規格書、檢驗標準，回覆客戶要等半天。", solution: "把規格書、SOP 與 ISO 文件建成知識庫，直接用中文提問，回答附文件名稱與頁碼。", result: ["回答附出處可查核", "依部門設定查詢權限"] },
+  { tag: "零售／服務業", title: "LINE 官方帳號客服機器人", pain: "營業時間、價格、預約等重複問題占滿客服時間，下班後訊息沒人回。", solution: "串接 LINE 官方帳號自動回覆常見問題與預約，判斷處理不了時轉接真人。", result: ["24 小時即時回覆", "無法處理時轉真人"] },
+  { tag: "貿易／批發", title: "訂單文件擷取與 ERP 建檔", pain: "每天收到大量 PDF 訂單，要人工逐筆打進 ERP，容易打錯也耗時。", solution: "AI 代理自動擷取訂單欄位、比對客戶與庫存資料，再寫入 ERP，異常單送人工審核。", result: ["減少人工重複輸入", "異常單人工放行"] },
 ];
 
 const capabilities = [
@@ -43,15 +55,16 @@ const process = [
   ["04", "上線與維運", "完成教育訓練與驗收；交付日起提供三個月程式錯誤保固，並可接續維運。"],
 ];
 
+// hl：回答中要加粗的重點片段，需與回答文字完全一致
 const faq = [
-  { q: "我們公司適合導入 AI 嗎？需要先準備什麼？", a: "只要流程中有重複性高、需要反覆查資料或人工整理的環節，就有導入空間。建議從導入診斷開始，我們會盤點流程、資料現況與可行性，再決定是否進入開發。資料不需要事先整理乾淨，資料整備本來就是導入工作的一部分。" },
-  { q: "導入 AI 的費用怎麼計算？", a: `分成${stageCount}個階段報價：${plans.map((plan) => `${plan.name}${plan.monthly ? "" : " "}${priceLabel(plan)}，${plan.faqNote}`).join("；")}。實際費用依資料量、需要串接的系統數量、介面需求與部署方式確認。模型 API 的用量費用由供應商按量計收，不含在上述金額內。${stageCount}個階段也可以分開進行。` },
-  { q: "導入一套方案大概要多久？", a: "導入診斷通常一到兩週；單一場景的導入方案多為數週到一個多月，實際時程依串接系統數量與資料整備狀況而定。我們會先做最快能看到效果的範圍，而不是一次全做。" },
-  { q: "公司內部資料會外流嗎？", a: "可選擇不將資料用於模型訓練的商用 API 方案，或部署在你指定的雲端或內部環境。存取權限、紀錄保留期間與敏感欄位遮蔽規則，都會在規格階段一併確認並寫入文件。" },
-  { q: "如果 AI 回答錯誤怎麼辦？", a: "知識庫問答會附上來源出處方便查核，並可設定在信心不足時轉由真人處理。上線前會用測試題庫評測回答品質，上線後持續追蹤並調整知識內容與提示。重要決策仍建議保留人工複核。" },
-  { q: "可以接我們現有的系統嗎？", a: "可以。常見的 ERP、CRM、資料庫、Google Workspace、LINE 官方帳號與自有 API 都能串接。若某些系統沒有開放介面，會在診斷階段評估替代做法，例如以定期匯出檔案同步。" },
-  { q: "保固範圍是什麼？", a: "保固期自專案驗收交付日起算三個月。在已確認的功能範圍、操作方式與執行環境下，可重現且由程式本身造成的錯誤、異常或與驗收規格不符，保固內免費修復。新增功能、第三方模型或 API 規格變更、來源資料品質、網路與主機故障等不在程式錯誤保固範圍內，另行評估報價。" },
-  { q: "你們還有做交易系統開發嗎？", a: "有，持續承接。自動下單機、策略回測程式與客製化量化交易系統開發都仍在服務範圍內，歡迎直接來信說明市場、策略與執行方式。" },
+  { hl: ["建議從導入診斷開始", "資料不需要事先整理乾淨"], q: "我們公司適合導入 AI 嗎？需要先準備什麼？", a: "只要流程中有重複性高、需要反覆查資料或人工整理的環節，就有導入空間。建議從導入診斷開始，我們會盤點流程、資料現況與可行性，再決定是否進入開發。資料不需要事先整理乾淨，資料整備本來就是導入工作的一部分。" },
+  { hl: [`${stageCount}個階段也可以分開進行`, "模型 API 的用量費用由供應商按量計收"], q: "導入 AI 的費用怎麼計算？", a: `分成${stageCount}個階段報價：${plans.map((plan) => `${plan.name}${plan.monthly ? "" : " "}${priceLabel(plan)}，${plan.faqNote}`).join("；")}。實際費用依資料量、需要串接的系統數量、介面需求與部署方式確認。模型 API 的用量費用由供應商按量計收，不含在上述金額內。${stageCount}個階段也可以分開進行。` },
+  { hl: ["導入診斷通常一到兩週", "多為數週到一個多月"], q: "導入一套方案大概要多久？", a: "導入診斷通常一到兩週；單一場景的導入方案多為數週到一個多月，實際時程依串接系統數量與資料整備狀況而定。我們會先做最快能看到效果的範圍，而不是一次全做。" },
+  { hl: ["不將資料用於模型訓練", "部署在你指定的雲端或內部環境"], q: "公司內部資料會外流嗎？", a: "可選擇不將資料用於模型訓練的商用 API 方案，或部署在你指定的雲端或內部環境。存取權限、紀錄保留期間與敏感欄位遮蔽規則，都會在規格階段一併確認並寫入文件。" },
+  { hl: ["附上來源出處", "信心不足時轉由真人處理"], q: "如果 AI 回答錯誤怎麼辦？", a: "知識庫問答會附上來源出處方便查核，並可設定在信心不足時轉由真人處理。上線前會用測試題庫評測回答品質，上線後持續追蹤並調整知識內容與提示。重要決策仍建議保留人工複核。" },
+  { hl: ["ERP、CRM、資料庫、Google Workspace、LINE 官方帳號與自有 API 都能串接"], q: "可以接我們現有的系統嗎？", a: "可以。常見的 ERP、CRM、資料庫、Google Workspace、LINE 官方帳號與自有 API 都能串接。若某些系統沒有開放介面，會在診斷階段評估替代做法，例如以定期匯出檔案同步。" },
+  { hl: ["自專案驗收交付日起算三個月", "保固內免費修復"], q: "保固範圍是什麼？", a: "保固期自專案驗收交付日起算三個月。在已確認的功能範圍、操作方式與執行環境下，可重現且由程式本身造成的錯誤、異常或與驗收規格不符，保固內免費修復。新增功能、第三方模型或 API 規格變更、來源資料品質、網路與主機故障等不在程式錯誤保固範圍內，另行評估報價。" },
+  { hl: ["有，持續承接。"], q: "你們還有做交易系統開發嗎？", a: "有，持續承接。自動下單機、策略回測程式與客製化量化交易系統開發都仍在服務範圍內，歡迎直接來信說明市場、策略與執行方式。" },
 ];
 
 const businessJsonLd = {
@@ -107,6 +120,16 @@ const faqJsonLd = {
 };
 
 const MAIL = "mailto:nordchiou@gmail.com?subject=AI 導入方案諮詢";
+const LINE_URL = "https://lin.ee/65uAD7mm";
+
+const navLinks: [string, string][] = [
+  ["#services", "服務"], ["#scenarios", "應用情境"], ["#process", "流程"], ["#pricing", "方案"],
+  ["#warranty", "保障"], ["#work", "工程實績"], ["#about", "關於"], ["#faq", "常見問題"],
+];
+
+const escapeRe = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const highlight = (text: string, keys: string[]) =>
+  text.split(new RegExp(`(${keys.map(escapeRe).join("|")})`)).map((part, i) => (keys.includes(part) ? <strong key={i}>{part}</strong> : part));
 
 export default function Home() {
   return (
@@ -117,8 +140,9 @@ export default function Home() {
       <div className="nav-wrap">
         <nav className="nav shell" aria-label="主要導覽">
           <a className="brand" href="#top" aria-label="諾秋工作室首頁"><img className="brand-mark" src="/logo.png" alt="諾秋工作室標誌" width={42} height={42} /><span><strong>諾秋工作室</strong><small>AI SOLUTIONS</small></span></a>
-          <div className="nav-links"><a href="#services">服務</a><a href="#capability">能力</a><a href="#work">實績</a><a href="#pricing">方案</a><a href="#warranty">保障</a><a href="#about">關於</a><a href="#faq">常見問題</a></div>
-          <a className="nav-cta" href={MAIL}>討論導入 <span aria-hidden="true">↗</span></a>
+          <div className="nav-links">{navLinks.map(([href, label]) => <a key={href} href={href}>{label}</a>)}</div>
+          <a className="nav-cta" href="#contact" data-plan="導入診斷">預約診斷 <span aria-hidden="true">→</span></a>
+          <MobileMenu links={navLinks} lineUrl={LINE_URL} />
         </nav>
       </div>
 
@@ -127,22 +151,11 @@ export default function Home() {
           <p className="eyebrow"><span /> 知識庫・流程自動化・AI 客服</p>
           <h1>把 AI，裝進你<br />真正在跑的<span>日常流程。</span></h1>
           <p className="hero-lead">我們不交付展示用的 demo。從流程盤點、資料整備、模型選型，到系統串接、試營運與上線維運，替企業打造真正能用、能維護、能驗收的 AI 方案。</p>
-          <div className="hero-actions"><a className="button line" href="https://lin.ee/65uAD7mm" target="_blank" rel="noopener">加 LINE 諮詢 <span>↗</span></a><a className="button primary" href={MAIL}>預約導入診斷 <span>→</span></a><a className="button secondary" href="#capability">看我們的能力</a></div>
+          <div className="hero-actions"><a className="button primary" href="#contact" data-plan="導入診斷">預約導入診斷 <span>→</span></a><a className="button line" href={LINE_URL} target="_blank" rel="noopener">加 LINE 諮詢 <span>↗</span></a><a className="button secondary" href="#scenarios">看應用情境</a></div>
+          <p className="hero-note">導入診斷 NT${money(plans[0].amount)} 起，費用可全額折抵後續導入專案。</p>
           <div className="market-list" aria-label="核心方案"><span>KNOWLEDGE BASE</span><i /><span>AI AGENT</span><i /><span>AUTOMATION</span></div>
         </div>
-        <div className="terminal" aria-label="AI 導入流程示意面板">
-          <div className="terminal-top"><div className="window-dots"><i /><i /><i /></div><span>agent_runtime / live</span><b>CONNECTED</b></div>
-          <div className="ticker-row"><div><small>PIPELINE</small><strong>RAG + AGENT</strong></div><div><small>SOURCE</small><strong>內部文件</strong></div><div><small>STATUS</small><strong className="positive">RUNNING</strong></div></div>
-          <div className="flow" aria-hidden="true">
-            <div className="grid-lines" />
-            <div className="flow-step"><i>01</i><strong>文件匯入</strong><small>SOP / 報價 / 合約</small></div>
-            <div className="flow-step"><i>02</i><strong>切分與索引</strong><small>EMBEDDING</small></div>
-            <div className="flow-step"><i>03</i><strong>語意檢索</strong><small>TOP-K + RERANK</small></div>
-            <div className="flow-step"><i>04</i><strong>生成回答</strong><small>附來源出處</small></div>
-            <div className="flow-step done"><i>05</i><strong>人工審核關卡</strong><small>可選</small></div>
-          </div>
-          <div className="terminal-log"><p><span>09:03:18</span> retrieve docs <b>MATCH 5</b></p><p><span>09:03:19</span> tool call erp_query <b>OK</b></p><p><span>09:03:20</span> answer with sources <b>DONE</b></p></div>
-        </div>
+        <HeroDemo />
       </header>
 
       <section className="proof-strip"><div className="shell proof-grid"><div><strong>4</strong><span>核心導入方案</span></div><div><strong>3</strong><span>自建上線系統</span></div><div><strong>3 個月</strong><span>程式錯誤保固</span></div><div><strong>分階段</strong><span>診斷、導入、維運</span></div></div></section>
@@ -162,6 +175,23 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="section shell scenario-section" id="scenarios">
+        <div className="section-heading split"><div><p className="kicker">USE CASES</p><h2>導入之後，<br />日常會變成這樣</h2></div><p>以下為常見的導入示範情境，並非特定客戶案例。實際範圍會在導入診斷時，依你的流程與資料一起確認。</p></div>
+        <div className="scenario-grid">
+          {scenarios.map((item) => (
+            <article className="scenario-card" key={item.title}>
+              <p className="scenario-tag"><span>示範情境</span>{item.tag}</p>
+              <h3>{item.title}</h3>
+              <dl>
+                <div><dt>導入前</dt><dd>{item.pain}</dd></div>
+                <div><dt>導入後</dt><dd>{item.solution}</dd></div>
+              </dl>
+              <ul>{item.result.map((r) => <li key={r}>{r}</li>)}</ul>
+            </article>
+          ))}
+        </div>
+      </section>
+
       <section className="cap-section" id="capability"><div className="shell section">
         <div className="section-heading split"><div><p className="kicker">CAPABILITIES</p><h2>我們實際<br />交付得出來的東西</h2></div><p>與其列客戶名單，不如直接說清楚技術範圍與交付內容。每一項都能獨立拆出來驗收，也能組合成完整方案。</p></div>
         <div className="cap-grid">
@@ -176,15 +206,7 @@ export default function Home() {
         </div>
       </div></section>
 
-      <section className="work-section" id="work"><div className="shell section">
-        <div className="section-heading"><p className="kicker">ENGINEERING TRACK RECORD</p><h2>我們自己做出來、<br />而且還在跑的系統</h2><p>導入 AI 之前，我們已經在做必須即時反應、不能停、出錯就是真金白銀的系統。同樣的工程標準——穩定、可監控、可回復——直接沿用到 AI 專案上。</p></div>
-        <div className="portfolio-list">{portfolio.map((item,index)=><article className={`portfolio-card ${item.accent}`} key={item.title}><div className="portfolio-index">0{index+1}</div><div className="portfolio-visual"><label className="portfolio-zoom" htmlFor={`lb${index}`}><img src={item.image} alt={item.alt} width={item.width} height={item.height} loading="lazy" /><span className="zoom-hint" aria-hidden="true">⤢ 點擊放大</span></label></div><div className="portfolio-main"><span>{item.tag}</span><h3>{item.title}</h3><p>{item.description}</p><div className="portfolio-stats">{item.stats.map(([num,label])=><div key={label}><strong>{num}</strong><span>{label}</span></div>)}</div><ul>{item.features.map(feature=><li key={feature}>{feature}</li>)}</ul></div></article>)}</div>
-        <p className="work-note">交易系統開發（自動下單機、策略回測、API 串接）仍在服務範圍內，歡迎來信詢問。</p>
-        {portfolio.map((item,index)=><div key={item.title}>
-          <input type="checkbox" id={`lb${index}`} className="lightbox-toggle" aria-label={`放大檢視 ${item.title} 截圖`} />
-          <label htmlFor={`lb${index}`} className="lightbox"><img src={item.image} alt={item.alt} loading="lazy" /><span className="lightbox-close">✕ CLOSE</span></label>
-        </div>)}
-      </div></section>
+      <section className="section shell process-section" id="process"><div className="section-heading"><p className="kicker">HOW WE WORK</p><h2>四步驟，讓導入可驗收</h2></div><div className="process-grid">{process.map(([no,title,desc])=><article key={no}><span>{no}</span><h3>{title}</h3><p>{desc}</p></article>)}</div></section>
 
       <section className="section shell" id="pricing">
         <div className="section-heading split"><div><p className="kicker">ADOPTION PLANS</p><h2>依導入階段<br />分級報價</h2></div><p>先確認範圍，再談金額。{stageCount}個階段可以分開進行——完成{plans[0].name}後，再決定要不要進入開發。</p></div>
@@ -196,6 +218,7 @@ export default function Home() {
               <span>{plan.name}</span>
               <p className="plan-desc">{plan.desc}</p>
               <ul>{plan.items.map((item) => <li key={item}>{item}</li>)}</ul>
+              <a className={`button ${plan.featured ? "lime" : "primary"} price-cta`} href="#contact" data-plan={plan.name}>{plan.cta} <span>→</span></a>
             </div>
           ))}
         </div>
@@ -212,7 +235,11 @@ export default function Home() {
         </div>
       </div></section>
 
-      <section className="section shell process-section"><div className="section-heading"><p className="kicker">HOW WE WORK</p><h2>四步驟，讓導入可驗收</h2></div><div className="process-grid">{process.map(([no,title,desc])=><article key={no}><span>{no}</span><h3>{title}</h3><p>{desc}</p></article>)}</div></section>
+      <section className="work-section" id="work"><div className="shell section">
+        <div className="section-heading"><p className="kicker">ENGINEERING BACKGROUND</p><h2>工程可靠度，<br />來自不能停機的系統</h2><p>以下是我們自行開發、至今仍在運行的交易系統（非 AI 導入客戶案例）。它們必須即時反應、不能停機、出錯就是真金白銀——同樣的工程標準：穩定、可監控、可回復，就是我們交付 AI 專案的底線。</p></div>
+        <div className="portfolio-list">{portfolio.map((item,index)=><article className={`portfolio-card ${item.accent}`} key={item.title}><div className="portfolio-index">0{index+1}</div><div className="portfolio-visual"><PortfolioZoom src={item.image} alt={item.alt} width={item.width} height={item.height} title={item.title} /></div><div className="portfolio-main"><span>{item.tag}</span><h3>{item.title}</h3><p>{item.description}</p><div className="portfolio-stats">{item.stats.map(([num,label])=><div key={label}><strong>{num}</strong><span>{label}</span></div>)}</div><ul>{item.features.map(feature=><li key={feature}>{feature}</li>)}</ul></div></article>)}</div>
+        <p className="work-note">交易系統開發（自動下單機、策略回測、API 串接）仍在服務範圍內，歡迎來信詢問。</p>
+      </div></section>
 
       <section className="section shell about-section" id="about">
         <div className="section-heading split">
@@ -224,14 +251,25 @@ export default function Home() {
           <div><strong>3 年</strong><span>金融業經歷</span></div>
           <div><strong>3 套</strong><span>自建上線系統</span></div>
         </div>
+        <ul className="trust-list">
+          <li><b>立案登記</b>統一編號 00884771</li>
+          <li><b>條款寫進文件</b>範圍、驗收標準與保固內容都寫入專案確認文件</li>
+          <li><b>聯絡得到人</b>週一至週日 07:00–24:00，LINE、Email、電話皆可聯繫</li>
+        </ul>
       </section>
 
       <section className="section shell faq-section" id="faq">
         <div className="section-heading"><p className="kicker">FAQ</p><h2>常見問題</h2></div>
-        <div className="faq-list">{faq.map(({q,a})=><details key={q}><summary>{q}<span aria-hidden="true">+</span></summary><p>{a}</p></details>)}</div>
+        <div className="faq-list">{faq.map(({q,a,hl})=><details key={q}><summary>{q}<span aria-hidden="true">+</span></summary><p>{highlight(a,hl)}</p></details>)}</div>
       </section>
 
-      <section className="cta-section"><div className="shell cta-inner"><div><p className="kicker">LET&apos;S START</p><h2>你的流程，<br />我們幫你交給 AI。</h2><p>來信簡述你想改善的流程、目前的做法，以及資料放在哪裡，我們會回覆可行的導入方式與下一步。</p></div><div className="contact-actions"><a className="button line" href="https://lin.ee/65uAD7mm" target="_blank" rel="noopener">加 LINE 諮詢 <span>↗</span></a><a className="button primary" href={MAIL}>nordchiou@gmail.com <span>↗</span></a><a href="tel:0926192178">0926-192-178</a><small>服務時間：週一至週日 07:00–24:00</small><span className="line-qr"><img src="/line-qr.png" alt="諾秋工作室 LINE 官方帳號 QR code" width={110} height={110} loading="lazy" /><small>掃描加 LINE</small></span></div></div></section>
+      <section className="cta-section" id="contact"><div className="shell cta-inner">
+        <div>
+          <p className="kicker">LET&apos;S START</p><h2>你的流程，<br />我們幫你交給 AI。</h2><p>簡述你想改善的流程、目前的做法，以及資料放在哪裡，我們會回覆可行的導入方式與下一步。不想填表，也可以直接加 LINE 或來電。</p>
+          <div className="contact-actions"><a className="button line" href={LINE_URL} target="_blank" rel="noopener">加 LINE 諮詢 <span>↗</span></a><a href={MAIL}>nordchiou@gmail.com</a><a href="tel:0926192178">0926-192-178</a><small>服務時間：週一至週日 07:00–24:00</small><span className="line-qr"><img src="/line-qr.png" alt="諾秋工作室 LINE 官方帳號 QR code" width={110} height={110} loading="lazy" /><small>掃描加 LINE</small></span></div>
+        </div>
+        <InquiryForm plans={plans.map((plan) => plan.name)} />
+      </div></section>
       <footer className="footer shell"><div className="brand"><img className="brand-mark" src="/logo.png" alt="諾秋工作室標誌" width={42} height={42} /><span><strong>諾秋工作室</strong><small>NORDCHIOU STUDIO</small></span></div><p>統一編號 00884771</p><p>© 2026 諾秋工作室. All rights reserved.</p></footer>
     </main>
   );
