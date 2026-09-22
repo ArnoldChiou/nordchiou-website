@@ -1,8 +1,18 @@
+// 報價金額只在這裡維護；價格卡、FAQ 與 JSON-LD 都由 plans 產生。
 const plans = [
-  { step: "STEP 01", price: "15,000", unit: "起", name: "導入診斷", featured: false, desc: "先確認哪些流程值得導入、資料現況如何、預期能省下多少人力，再決定要不要做。費用可全額折抵後續導入專案。", items: ["1–2 次深度訪談與流程盤點", "資料現況與可行性評估", "導入優先順序建議", "導入路線圖與範圍建議書"] },
-  { step: "STEP 02", price: "80,000", unit: "起", name: "方案導入", featured: true, desc: "從規格、開發、串接到試營運上線的完整導入，交付可驗收的系統。單一場景的起價，依串接系統數量與介面需求調整。", items: ["需求規格與驗收標準", "系統開發與既有系統串接", "小範圍試營運與回答調校", "操作說明與團隊教育訓練", "三個月程式錯誤保固"] },
-  { step: "STEP 03", price: "5,000", unit: "／月起", name: "持續維運", featured: false, desc: "上線之後才是開始。維持系統穩定、控制用量成本，並持續更新知識內容。三個月保固到期後開始計收。", items: ["一般維護與運行協助", "用量與成本監控", "知識庫與提示內容更新", "新增功能另行報價"] },
+  { step: "STEP 01", amount: 15000, monthly: false, name: "導入診斷", offerName: "導入診斷", featured: false, desc: "先確認哪些流程值得導入、資料現況如何、預期能省下多少人力，再決定要不要做。費用可全額折抵後續導入專案。", faqNote: "費用可全額折抵後續導入專案", offerDesc: "流程盤點、資料現況與可行性評估、導入路線圖建議；費用可全額折抵後續導入專案。", items: ["1–2 次深度訪談與流程盤點", "資料現況與可行性評估", "導入優先順序建議", "導入路線圖與範圍建議書"] },
+  { step: "STEP 02", amount: 80000, monthly: false, name: "方案導入", offerName: "方案導入", featured: true, desc: "從規格、開發、串接到試營運上線的完整導入，交付可驗收的系統。單一場景的起價，依串接系統數量與介面需求調整。", faqNote: "為單一場景的完整導入起價", offerDesc: "單一場景的完整導入起價，含規格、開發、串接、試營運與三個月程式錯誤保固。", items: ["需求規格與驗收標準", "系統開發與既有系統串接", "小範圍試營運與回答調校", "操作說明與團隊教育訓練", "三個月程式錯誤保固"] },
+  { step: "STEP 03", amount: 5000, monthly: true, name: "持續維運", offerName: "持續維運（每月）", featured: false, desc: "上線之後才是開始。維持系統穩定、控制用量成本，並持續更新知識內容。三個月保固到期後開始計收。", faqNote: "自三個月保固到期後開始計收", offerDesc: "三個月保固到期後開始計收，涵蓋一般維護、用量監控與知識內容更新。", items: ["一般維護與運行協助", "用量與成本監控", "知識庫與提示內容更新", "新增功能另行報價"] },
 ];
+
+const CN_NUM = ["零", "一", "二", "三", "四", "五", "六"];
+const money = (n: number) => n.toLocaleString("en-US");
+const unitLabel = (plan: (typeof plans)[number]) => (plan.monthly ? "／月起" : "起");
+const priceLabel = (plan: (typeof plans)[number]) =>
+  `${plan.monthly ? "每月 " : ""}NT$${money(plan.amount)} 起`;
+const stageCount = CN_NUM[plans.length] ?? String(plans.length);
+// 專案起價不計入月費方案
+const minAmount = Math.min(...plans.filter((plan) => !plan.monthly).map((plan) => plan.amount));
 
 const services = [
   { no: "01", icon: "KB", title: "企業知識庫問答", desc: "把內部文件、SOP、規章與產品資料變成可以直接提問的知識庫，回答附上來源出處，並支援權限分層。", items: ["文件自動切分與索引", "回答附出處可查核", "網頁、LINE、Slack 介面"] },
@@ -35,7 +45,7 @@ const process = [
 
 const faq = [
   { q: "我們公司適合導入 AI 嗎？需要先準備什麼？", a: "只要流程中有重複性高、需要反覆查資料或人工整理的環節，就有導入空間。建議從導入診斷開始，我們會盤點流程、資料現況與可行性，再決定是否進入開發。資料不需要事先整理乾淨，資料整備本來就是導入工作的一部分。" },
-  { q: "導入 AI 的費用怎麼計算？", a: "分成三個階段報價：導入診斷 NT$15,000 起，費用可全額折抵後續導入專案；方案導入 NT$80,000 起，為單一場景的完整導入起價；三個月保固到期後的持續維運每月 NT$5,000 起。實際費用依資料量、需要串接的系統數量、介面需求與部署方式確認。模型 API 的用量費用由供應商按量計收，不含在上述金額內。三個階段也可以分開進行。" },
+  { q: "導入 AI 的費用怎麼計算？", a: `分成${stageCount}個階段報價：${plans.map((plan) => `${plan.name}${plan.monthly ? "" : " "}${priceLabel(plan)}，${plan.faqNote}`).join("；")}。實際費用依資料量、需要串接的系統數量、介面需求與部署方式確認。模型 API 的用量費用由供應商按量計收，不含在上述金額內。${stageCount}個階段也可以分開進行。` },
   { q: "導入一套方案大概要多久？", a: "導入診斷通常一到兩週；單一場景的導入方案多為數週到一個多月，實際時程依串接系統數量與資料整備狀況而定。我們會先做最快能看到效果的範圍，而不是一次全做。" },
   { q: "公司內部資料會外流嗎？", a: "可選擇不將資料用於模型訓練的商用 API 方案，或部署在你指定的雲端或內部環境。存取權限、紀錄保留期間與敏感欄位遮蔽規則，都會在規格階段一併確認並寫入文件。" },
   { q: "如果 AI 回答錯誤怎麼辦？", a: "知識庫問答會附上來源出處方便查核，並可設定在信心不足時轉由真人處理。上線前會用測試題庫評測回答品質，上線後持續追蹤並調整知識內容與提示。重要決策仍建議保留人工複核。" },
@@ -66,7 +76,7 @@ const businessJsonLd = {
       closes: "23:59",
     },
   ],
-  priceRange: "NT$15,000 起",
+  priceRange: `NT$${money(minAmount)} 起`,
   hasOfferCatalog: {
     "@type": "OfferCatalog",
     name: "企業 AI 導入服務",
@@ -76,9 +86,12 @@ const businessJsonLd = {
       { "@type": "Offer", itemOffered: { "@type": "Service", name: "AI 客服與 LINE 機器人", description: "串接 LINE 官方帳號或網站客服，自動回覆常見問題、收單與預約，必要時轉接真人。" } },
       { "@type": "Offer", itemOffered: { "@type": "Service", name: "AI 顧問與教育訓練", description: "流程盤點、可行性評估、工具與模型選型、導入路線圖規劃與團隊實作訓練。" } },
       { "@type": "Offer", itemOffered: { "@type": "Service", name: "客製化量化交易系統開發", description: "自動下單機、策略回測程式與券商、交易所 API 串接開發。" } },
-      { "@type": "Offer", price: "15000", priceCurrency: "TWD", itemOffered: { "@type": "Service", name: "導入診斷", description: "流程盤點、資料現況與可行性評估、導入路線圖建議；費用可全額折抵後續導入專案。" } },
-      { "@type": "Offer", price: "80000", priceCurrency: "TWD", itemOffered: { "@type": "Service", name: "方案導入", description: "單一場景的完整導入起價，含規格、開發、串接、試營運與三個月程式錯誤保固。" } },
-      { "@type": "Offer", price: "5000", priceCurrency: "TWD", itemOffered: { "@type": "Service", name: "持續維運（每月）", description: "三個月保固到期後開始計收，涵蓋一般維護、用量監控與知識內容更新。" } },
+      ...plans.map((plan) => ({
+        "@type": "Offer",
+        price: String(plan.amount),
+        priceCurrency: "TWD",
+        itemOffered: { "@type": "Service", name: plan.offerName, description: plan.offerDesc },
+      })),
     ],
   },
 };
@@ -174,12 +187,12 @@ export default function Home() {
       </div></section>
 
       <section className="section shell" id="pricing">
-        <div className="section-heading split"><div><p className="kicker">ADOPTION PLANS</p><h2>依導入階段<br />分級報價</h2></div><p>先確認範圍，再談金額。三個階段可以分開進行——完成導入診斷後，再決定要不要進入開發。</p></div>
+        <div className="section-heading split"><div><p className="kicker">ADOPTION PLANS</p><h2>依導入階段<br />分級報價</h2></div><p>先確認範圍，再談金額。{stageCount}個階段可以分開進行——完成{plans[0].name}後，再決定要不要進入開發。</p></div>
         <div className="pricing-wrap">
           {plans.map((plan) => (
             <div className={`price-card${plan.featured ? " featured" : ""}`} key={plan.step}>
               <p>{plan.step}</p>
-              <h3><small>NT$</small>{plan.price}<i>{plan.unit}</i></h3>
+              <h3><small>NT$</small>{money(plan.amount)}<i>{unitLabel(plan)}</i></h3>
               <span>{plan.name}</span>
               <p className="plan-desc">{plan.desc}</p>
               <ul>{plan.items.map((item) => <li key={item}>{item}</li>)}</ul>
