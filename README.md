@@ -1,6 +1,6 @@
 # nordchiou-website
 
-諾秋工作室（下單機與策略回測程式）官網。以 [vinext](https://github.com/cloudflare/vinext)（Next.js on Vite）開發，靜態匯出後部署到 GitHub Pages，不依賴資料庫或 ChatGPT 登入。
+諾秋工作室（企業 AI 導入方案）官網。以 [vinext](https://github.com/cloudflare/vinext)（Next.js on Vite）開發，靜態匯出後部署到 GitHub Pages，不依賴資料庫或 ChatGPT 登入。
 
 ## 開發
 
