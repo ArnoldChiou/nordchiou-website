@@ -83,6 +83,11 @@ try {
   await cp(join(root, "public", "favicon.ico"), join(docs, "favicon.ico"));
   await cp(join(root, "public", "robots.txt"), join(docs, "robots.txt"));
   await cp(join(root, "public", "sitemap.xml"), join(docs, "sitemap.xml"));
+  await cp(join(root, "public", "llms.txt"), join(docs, "llms.txt"));
+  await cp(
+    join(root, "public", "apple-touch-icon.png"),
+    join(docs, "apple-touch-icon.png"),
+  );
   await writeFile(join(docs, "index.html"), staticHtml, "utf8");
 
   // GitHub Pages 會自動用 404.html 當找不到頁面的回應

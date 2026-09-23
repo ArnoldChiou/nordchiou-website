@@ -43,6 +43,7 @@ const capabilities = [
 ];
 
 const portfolio = [
+  { tag: "HEALTHCARE / AI AGENT", title: "HIS 同意書 AI 協作製作流程", description: "為醫療院所把 HIS 同意書的修改與交付整理成 AI 協作工作流：使用者在 Telegram 用自然語言提出需求，AI 讀懂附件、只修改被授權的表單並執行驗證，經人工確認後才推送 GitHub 與交付 ZIP。", stats: [["Telegram", "自然語言提出需求"], ["人工確認", "上線前最終把關"]], features: ["讀懂 DOCX／PDF／截圖等附件與版面需求", "語法、編碼、SHA-256 等固定檢查交給腳本", "checkpoint 與 session reset 管理上下文"], accent: "violet", image: "/portfolio/his-consent-ai.webp", alt: "HIS 同意書 AI 協作製作流程示意圖：Telegram 需求、AI 修改、腳本檢查、人工確認與交付", width: 1280, height: 720 },
   { tag: "CRYPTO / RUST", title: "Alpharnold Quant Trading System", description: "面向 Binance Futures 的多策略量化交易引擎，7×24 無人值守運行，涵蓋即時行情、策略執行、下單、狀態回滾與部位對帳。", stats: [["6 個月", "實盤運行"], ["3 個", "管理交易對"]], features: ["多幣種、多策略併行", "斷線與失敗狀態回復", "交易所倉位自動對帳"], accent: "lime", image: "/portfolio/alpharnold-system.webp", alt: "Alpharnold 量化交易引擎系統架構與執行狀態展示", width: 1280, height: 720 },
   { tag: "DESKTOP APP / GPU + CPU", title: "Backtest Studio", description: "支援加密貨幣與台指期的桌面運算平台，把大量參數組合的運算工作自動化，並輸出可比較的結果與交易明細。", stats: [["30 秒", "跑完 6 年歷史回測"], ["5 位", "授權使用者"]], features: ["大量參數批次運算", "CPU / GPU 平行最佳化", "成本、滑價與轉倉模型"], accent: "blue", image: "/portfolio/backtest-studio.webp", alt: "Backtest Studio 實際授權登入與回測工作台畫面", width: 1280, height: 614 },
   { tag: "AUTOMATION / SHIOAJI API", title: "個股期貨自動下單機", description: "串接永豐金 Shioaji 的自動化交易系統，把原本人工盯盤的流程改成自動篩選、即時判斷與風控攔截。", stats: [["20 筆", "日均處理委託"], ["70%", "省下看盤時間"]], features: ["網頁化監控與參數調整", "模擬、訊號、正式分級執行", "委託回報與風控狀態機"], accent: "amber", image: "/portfolio/api-trade.webp", alt: "個股期貨下單機實際策略參數與監控介面", width: 1280, height: 720 },
@@ -57,7 +58,9 @@ const process = [
 
 // hl：回答中要加粗的重點片段，需與回答文字完全一致
 const faq = [
+  { hl: ["企業知識庫問答（RAG）、流程自動化與 AI Agent、AI 客服與 LINE 機器人，以及 AI 顧問與教育訓練"], q: "諾秋工作室提供哪些服務？", a: "諾秋工作室是專注企業 AI 導入的技術工作室，提供四類服務：企業知識庫問答（RAG）、流程自動化與 AI Agent、AI 客服與 LINE 機器人，以及 AI 顧問與教育訓練。從流程盤點、系統串接到上線維運都由同一個團隊負責，另外也承接客製化量化交易系統開發。" },
   { hl: ["建議從導入診斷開始", "資料不需要事先整理乾淨"], q: "我們公司適合導入 AI 嗎？需要先準備什麼？", a: "只要流程中有重複性高、需要反覆查資料或人工整理的環節，就有導入空間。建議從導入診斷開始，我們會盤點流程、資料現況與可行性，再決定是否進入開發。資料不需要事先整理乾淨，資料整備本來就是導入工作的一部分。" },
+  { hl: ["先從公司自己的文件中找出相關段落", "附上來源出處"], q: "什麼是 RAG 知識庫問答？和直接使用 ChatGPT 有什麼不同？", a: "RAG（檢索增強生成）會先從公司自己的文件中找出相關段落，再讓模型根據這些內容回答，並附上來源出處。和直接使用通用聊天機器人相比，回答依據的是你的內部資料而不是模型的一般知識，比較不會憑空編造，也能依部門設定查詢權限、方便查核。" },
   { hl: [`${stageCount}個階段也可以分開進行`, "模型 API 的用量費用由供應商按量計收"], q: "導入 AI 的費用怎麼計算？", a: `分成${stageCount}個階段報價：${plans.map((plan) => `${plan.name}${plan.monthly ? "" : " "}${priceLabel(plan)}，${plan.faqNote}`).join("；")}。實際費用依資料量、需要串接的系統數量、介面需求與部署方式確認。模型 API 的用量費用由供應商按量計收，不含在上述金額內。${stageCount}個階段也可以分開進行。` },
   { hl: ["導入診斷通常一到兩週", "多為數週到一個多月"], q: "導入一套方案大概要多久？", a: "導入診斷通常一到兩週；單一場景的導入方案多為數週到一個多月，實際時程依串接系統數量與資料整備狀況而定。我們會先做最快能看到效果的範圍，而不是一次全做。" },
   { hl: ["不將資料用於模型訓練", "部署在你指定的雲端或內部環境"], q: "公司內部資料會外流嗎？", a: "可選擇不將資料用於模型訓練的商用 API 方案，或部署在你指定的雲端或內部環境。存取權限、紀錄保留期間與敏感欄位遮蔽規則，都會在規格階段一併確認並寫入文件。" },
@@ -67,9 +70,24 @@ const faq = [
   { hl: ["有，持續承接。"], q: "你們還有做交易系統開發嗎？", a: "有，持續承接。自動下單機、策略回測程式與客製化量化交易系統開發都仍在服務範圍內，歡迎直接來信說明市場、策略與執行方式。" },
 ];
 
+const SITE = "https://nordchiou.com/";
+const ORG_ID = `${SITE}#organization`;
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${SITE}#website`,
+  url: SITE,
+  name: "諾秋工作室",
+  alternateName: "Nordchiou Studio",
+  inLanguage: "zh-Hant",
+  publisher: { "@id": ORG_ID },
+};
+
 const businessJsonLd = {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
+  "@id": ORG_ID,
   name: "諾秋工作室",
   alternateName: "Nordchiou Studio",
   url: "https://nordchiou.com/",
@@ -79,6 +97,16 @@ const businessJsonLd = {
   email: "nordchiou@gmail.com",
   telephone: "+886-926-192-178",
   taxID: "00884771",
+  sameAs: ["https://lin.ee/65uAD7mm"],
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: "customer service",
+    telephone: "+886-926-192-178",
+    email: "nordchiou@gmail.com",
+    areaServed: "TW",
+    availableLanguage: ["zh-Hant"],
+  },
+  knowsAbout: ["企業 AI 導入", "檢索增強生成（RAG）", "AI Agent", "流程自動化", "LINE 聊天機器人", "AI 客服", "量化交易系統開發"],
   areaServed: { "@type": "Country", name: "Taiwan" },
   knowsLanguage: "zh-Hant",
   openingHoursSpecification: [
@@ -112,6 +140,9 @@ const businessJsonLd = {
 const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
+  "@id": `${SITE}#faq`,
+  inLanguage: "zh-Hant",
+  isPartOf: { "@id": `${SITE}#website` },
   mainEntity: faq.map(({ q, a }) => ({
     "@type": "Question",
     name: q,
@@ -124,7 +155,7 @@ const LINE_URL = "https://lin.ee/65uAD7mm";
 
 const navLinks: [string, string][] = [
   ["#services", "服務"], ["#scenarios", "應用情境"], ["#process", "流程"], ["#pricing", "方案"],
-  ["#warranty", "保障"], ["#work", "工程實績"], ["#about", "關於"], ["#faq", "常見問題"],
+  ["#warranty", "保障"], ["#work", "實績"], ["#about", "關於"], ["#faq", "常見問題"],
 ];
 
 const escapeRe = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -134,6 +165,7 @@ const highlight = (text: string, keys: string[]) =>
 export default function Home() {
   return (
     <main>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(businessJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
@@ -150,7 +182,7 @@ export default function Home() {
         <div className="hero-copy">
           <p className="eyebrow"><span /> 知識庫・流程自動化・AI 客服</p>
           <h1>把 AI，裝進你<br />真正在跑的<span>日常流程。</span></h1>
-          <p className="hero-lead">我們不交付展示用的 demo。從流程盤點、資料整備、模型選型，到系統串接、試營運與上線維運，替企業打造真正能用、能維護、能驗收的 AI 方案。</p>
+          <p className="hero-lead">諾秋工作室是專注<strong>企業 AI 導入</strong>的技術工作室。從流程盤點、資料整備、模型選型，到系統串接、試營運與上線維運，替台灣企業打造真正能用、能維護、能驗收的 AI 方案——不交付展示用的 demo。</p>
           <div className="hero-actions"><a className="button primary" href="#contact" data-plan="導入診斷">預約導入診斷 <span>→</span></a><a className="button line" href={LINE_URL} target="_blank" rel="noopener">加 LINE 諮詢 <span>↗</span></a><a className="button secondary" href="#scenarios">看應用情境</a></div>
           <p className="hero-note">導入診斷 NT${money(plans[0].amount)} 起，費用可全額折抵後續導入專案。</p>
           <div className="market-list" aria-label="核心方案"><span>KNOWLEDGE BASE</span><i /><span>AI AGENT</span><i /><span>AUTOMATION</span></div>
@@ -214,8 +246,8 @@ export default function Home() {
           {plans.map((plan) => (
             <div className={`price-card${plan.featured ? " featured" : ""}`} key={plan.step}>
               <p>{plan.step}</p>
-              <h3><small>NT$</small>{money(plan.amount)}<i>{unitLabel(plan)}</i></h3>
-              <span>{plan.name}</span>
+              <p className="price-amount"><small>NT$</small>{money(plan.amount)}<i>{unitLabel(plan)}</i></p>
+              <h3 className="price-name">{plan.name}</h3>
               <p className="plan-desc">{plan.desc}</p>
               <ul>{plan.items.map((item) => <li key={item}>{item}</li>)}</ul>
               <a className={`button ${plan.featured ? "lime" : "primary"} price-cta`} href="#contact" data-plan={plan.name}>{plan.cta} <span>→</span></a>
@@ -236,7 +268,7 @@ export default function Home() {
       </div></section>
 
       <section className="work-section" id="work"><div className="shell section">
-        <div className="section-heading"><p className="kicker">ENGINEERING BACKGROUND</p><h2>工程可靠度，<br />來自不能停機的系統</h2><p>以下是我們自行開發、至今仍在運行的交易系統（非 AI 導入客戶案例）。它們必須即時反應、不能停機、出錯就是真金白銀——同樣的工程標準：穩定、可監控、可回復，就是我們交付 AI 專案的底線。</p></div>
+        <div className="section-heading"><p className="kicker">TRACK RECORD</p><h2>AI 導入實績，<br />與不能停機的系統</h2><p>第一個是客戶委託的 AI 協作流程，其餘是我們自行開發、至今仍在運行的交易系統。共同的工程標準——穩定、可監控、可回復、關鍵步驟由人把關——就是我們交付 AI 專案的底線。</p></div>
         <div className="portfolio-list">{portfolio.map((item,index)=><article className={`portfolio-card ${item.accent}`} key={item.title}><div className="portfolio-index">0{index+1}</div><div className="portfolio-visual"><PortfolioZoom src={item.image} alt={item.alt} width={item.width} height={item.height} title={item.title} /></div><div className="portfolio-main"><span>{item.tag}</span><h3>{item.title}</h3><p>{item.description}</p><div className="portfolio-stats">{item.stats.map(([num,label])=><div key={label}><strong>{num}</strong><span>{label}</span></div>)}</div><ul>{item.features.map(feature=><li key={feature}>{feature}</li>)}</ul></div></article>)}</div>
         <p className="work-note">交易系統開發（自動下單機、策略回測、API 串接）仍在服務範圍內，歡迎來信詢問。</p>
       </div></section>
