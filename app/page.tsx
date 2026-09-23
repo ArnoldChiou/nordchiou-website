@@ -2,6 +2,7 @@ import HeroDemo from "./HeroDemo";
 import InquiryForm from "./InquiryForm";
 import MobileMenu from "./MobileMenu";
 import PortfolioZoom from "./PortfolioZoom";
+import ServiceIcon from "./ServiceIcon";
 
 // 報價金額只在這裡維護；價格卡、FAQ 與 JSON-LD 都由 plans 產生。
 const plans = [
@@ -20,10 +21,10 @@ const stageCount = CN_NUM[plans.length] ?? String(plans.length);
 const minAmount = Math.min(...plans.filter((plan) => !plan.monthly).map((plan) => plan.amount));
 
 const services = [
-  { no: "01", icon: "KB", title: "企業知識庫問答", desc: "把內部文件、SOP、規章與產品資料變成可以直接提問的知識庫，回答附上來源出處，並支援權限分層。", items: ["文件自動切分與索引", "回答附出處可查核", "網頁、LINE、Slack 介面"] },
-  { no: "02", icon: "AGT", title: "流程自動化與 AI Agent", desc: "讓 AI 代理接手報表整理、資料比對、跨系統查詢等重複性工作，並保留失敗重試與人工審核關卡。", items: ["多步驟任務編排", "既有系統 API 串接", "執行紀錄與審核機制"] },
-  { no: "03", icon: "BOT", title: "AI 客服與 LINE 機器人", desc: "串接 LINE 官方帳號或網站客服，自動回覆常見問題、收單與預約，判斷處理不了時轉接真人。", items: ["LINE OA／網頁掛件", "意圖判斷與轉真人", "對話紀錄與成效統計"] },
-  { no: "04", icon: "ADV", title: "AI 顧問與教育訓練", desc: "協助盤點哪些流程適合導入、工具與模型怎麼選、導入順序怎麼排，並為內部團隊做實作訓練。", items: ["流程盤點與可行性評估", "工具與模型選型", "團隊實作工作坊"] },
+  { no: "01", icon: "kb" as const, title: "企業知識庫問答", desc: "把內部文件、SOP、規章與產品資料變成可以直接提問的知識庫，回答附上來源出處，並支援權限分層。", items: ["文件自動切分與索引", "回答附出處可查核", "網頁、LINE、Slack 介面"] },
+  { no: "02", icon: "agent" as const, title: "流程自動化與 AI Agent", desc: "讓 AI 代理接手報表整理、資料比對、跨系統查詢等重複性工作，並保留失敗重試與人工審核關卡。", items: ["多步驟任務編排", "既有系統 API 串接", "執行紀錄與審核機制"] },
+  { no: "03", icon: "bot" as const, title: "AI 客服與 LINE 機器人", desc: "串接 LINE 官方帳號或網站客服，自動回覆常見問題、收單與預約，判斷處理不了時轉接真人。", items: ["LINE OA／網頁掛件", "意圖判斷與轉真人", "對話紀錄與成效統計"] },
+  { no: "04", icon: "advisor" as const, title: "AI 顧問與教育訓練", desc: "協助盤點哪些流程適合導入、工具與模型怎麼選、導入順序怎麼排，並為內部團隊做實作訓練。", items: ["流程盤點與可行性評估", "工具與模型選型", "團隊實作工作坊"] },
 ];
 
 // 示範情境：常見導入範例，非特定客戶案例
@@ -198,7 +199,7 @@ export default function Home() {
           {services.map((service) => (
             <article key={service.no}>
               <span className="service-no">{service.no}</span>
-              <div className="service-icon">{service.icon}</div>
+              <div className="service-icon"><ServiceIcon name={service.icon} /></div>
               <h3>{service.title}</h3>
               <p>{service.desc}</p>
               <ul>{service.items.map((item) => <li key={item}>{item}</li>)}</ul>
