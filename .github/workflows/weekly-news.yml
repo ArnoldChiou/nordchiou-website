@@ -1,0 +1,54 @@
+name: Weekly AI News Draft
+
+on:
+  schedule:
+    # 每週一 08:00（台灣時間）
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: weekly-news
+  cancel-in-progress: false
+
+jobs:
+  draft:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # 預設用 Claude Code 的訂閱額度（CLAUDE_CODE_OAUTH_TOKEN，由 claude setup-token 產生）；
+      # 若有設定 ANTHROPIC_API_KEY 則改走 API 按量計費。secret 只傳給需要的步驟
+      - run: if [ -z "$ANTHROPIC_API_KEY" ]; then npm install -g @anthropic-ai/claude-code; fi
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      - id: news
+        run: node scripts/generate-news.mjs
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+      # merge 這個 PR 就會發布；不想發布就直接關閉 PR
+      - if: steps.news.outputs.slug != ''
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: news/${{ steps.news.outputs.slug }}
+          add-paths: content/news
+          commit-message: "Add AI news digest ${{ steps.news.outputs.slug }}"
+          title: "AI 新聞週報草稿：${{ steps.news.outputs.title }}"
+          body: |
+            本週 AI 新聞週報草稿（${{ steps.news.outputs.count }} 則），由 Claude 協助挑選與撰寫。
+
+            審核重點：
+            - 點開每則的來源連結，確認摘要沒有與原文不符的數字或說法
+            - 「對企業的意義」是否符合諾秋工作室的觀點
+            - 可以直接在這個 PR 裡修改 Markdown
+
+            merge 之後會自動部署到網站；不發布就直接關閉這個 PR。
+          delete-branch: true

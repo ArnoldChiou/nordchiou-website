@@ -1,8 +1,8 @@
 import HeroDemo from "./HeroDemo";
 import InquiryForm from "./InquiryForm";
-import MobileMenu from "./MobileMenu";
 import PortfolioZoom from "./PortfolioZoom";
 import ServiceIcon from "./ServiceIcon";
+import { LINE_URL, SiteFooter, SiteNav } from "./SiteChrome";
 
 // 報價金額只在這裡維護；價格卡、FAQ 與 JSON-LD 都由 plans 產生。
 const plans = [
@@ -152,12 +152,6 @@ const faqJsonLd = {
 };
 
 const MAIL = "mailto:nordchiou@gmail.com?subject=AI 導入方案諮詢";
-const LINE_URL = "https://lin.ee/65uAD7mm";
-
-const navLinks: [string, string][] = [
-  ["#services", "服務"], ["#scenarios", "應用情境"], ["#process", "流程"], ["#pricing", "方案"],
-  ["#warranty", "保障"], ["#work", "實績"], ["#about", "關於"], ["#faq", "常見問題"],
-];
 
 const escapeRe = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const highlight = (text: string, keys: string[]) =>
@@ -170,14 +164,7 @@ export default function Home() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(businessJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
-      <div className="nav-wrap">
-        <nav className="nav shell" aria-label="主要導覽">
-          <a className="brand" href="#top" aria-label="諾秋工作室首頁"><img className="brand-mark" src="/logo.png" alt="諾秋工作室標誌" width={42} height={42} /><span><strong>諾秋工作室</strong><small>AI SOLUTIONS</small></span></a>
-          <div className="nav-links">{navLinks.map(([href, label]) => <a key={href} href={href}>{label}</a>)}</div>
-          <a className="nav-cta" href="#contact" data-plan="導入診斷">預約診斷 <span aria-hidden="true">→</span></a>
-          <MobileMenu links={navLinks} lineUrl={LINE_URL} />
-        </nav>
-      </div>
+      <SiteNav />
 
       <header className="hero shell" id="top">
         <div className="hero-copy">
@@ -303,7 +290,7 @@ export default function Home() {
         </div>
         <InquiryForm plans={plans.map((plan) => plan.name)} />
       </div></section>
-      <footer className="footer shell"><div className="brand"><img className="brand-mark" src="/logo.png" alt="諾秋工作室標誌" width={42} height={42} /><span><strong>諾秋工作室</strong><small>NORDCHIOU STUDIO</small></span></div><p>統一編號 00884771</p><p>© 2026 諾秋工作室. All rights reserved.</p></footer>
+      <SiteFooter />
     </main>
   );
 }

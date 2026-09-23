@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 export default function MobileMenu({ links, lineUrl }: { links: [string, string][]; lineUrl: string }) {
@@ -20,7 +21,7 @@ export default function MobileMenu({ links, lineUrl }: { links: [string, string]
       <div className="mobile-menu-panel" onClick={(event) => { if ((event.target as Element).closest("a")) close(); }}>
         <nav aria-label="行動版導覽">{links.map(([href, label]) => <a key={href} href={href}>{label}</a>)}</nav>
         <div className="mobile-menu-actions">
-          <a className="button primary" href="#contact" data-plan="導入診斷">預約導入診斷 <span>→</span></a>
+          <Link className="button primary" href="/#contact" data-plan="導入診斷">預約導入診斷 <span>→</span></Link>
           <a className="button line" href={lineUrl} target="_blank" rel="noopener">加 LINE 諮詢 <span>↗</span></a>
         </div>
       </div>

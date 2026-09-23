@@ -61,14 +61,30 @@ function toStaticHtml(rendered) {
 }
 
 try {
-  const staticHtml = toStaticHtml(
-    await waitForPage(`http://127.0.0.1:${port}/`),
-  );
+  const origin = `http://127.0.0.1:${port}`;
+  const staticHtml = toStaticHtml(await waitForPage(`${origin}/`));
+
+  // 由 sitemap 取得所有頁面路徑，逐頁輸出靜態 HTML
+  const sitemapXml = await (await fetch(`${origin}/sitemap.xml`)).text();
+  const paths = [...sitemapXml.matchAll(/<loc>https?:\/\/[^/<]+(\/[^<]*)<\/loc>/g)]
+    .map((match) => decodeURIComponent(match[1].replace(/&amp;/g, "&")))
+    .filter((path) => path !== "/");
+  const pages = [];
+  for (const path of paths) {
+    pages.push([path, toStaticHtml(await waitForPage(`${origin}${path}`))]);
+  }
+  const feeds = [];
+  for (const section of ["blog", "news"]) {
+    feeds.push([section, await (await fetch(`${origin}/${section}/rss.xml`)).text()]);
+  }
 
   const docs = join(root, "docs");
   await rm(docs, { recursive: true, force: true });
   await mkdir(docs, { recursive: true });
   await cp(join(root, "dist", "client", "assets"), join(docs, "assets"), {
+    recursive: true,
+  });
+  await cp(join(root, "public", "content-images"), join(docs, "content-images"), {
     recursive: true,
   });
   await cp(join(root, "public", "portfolio"), join(docs, "portfolio"), {
@@ -82,13 +98,21 @@ try {
   await cp(join(root, "public", "line-qr.png"), join(docs, "line-qr.png"));
   await cp(join(root, "public", "favicon.ico"), join(docs, "favicon.ico"));
   await cp(join(root, "public", "robots.txt"), join(docs, "robots.txt"));
-  await cp(join(root, "public", "sitemap.xml"), join(docs, "sitemap.xml"));
+  await writeFile(join(docs, "sitemap.xml"), sitemapXml, "utf8");
   await cp(join(root, "public", "llms.txt"), join(docs, "llms.txt"));
   await cp(
     join(root, "public", "apple-touch-icon.png"),
     join(docs, "apple-touch-icon.png"),
   );
   await writeFile(join(docs, "index.html"), staticHtml, "utf8");
+  for (const [path, html] of pages) {
+    await mkdir(join(docs, path), { recursive: true });
+    await writeFile(join(docs, path, "index.html"), html, "utf8");
+  }
+  for (const [section, rss] of feeds) {
+    await mkdir(join(docs, section), { recursive: true });
+    await writeFile(join(docs, section, "rss.xml"), rss, "utf8");
+  }
 
   // GitHub Pages 會自動用 404.html 當找不到頁面的回應
   try {

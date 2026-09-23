@@ -33,3 +33,5 @@
 ## 頁面
 
 - [首頁](https://nordchiou.com/)：服務、應用情境、技術能力、合作流程、方案報價、保固條款、工程實績與常見問題
+- [AI 新聞週報](https://nordchiou.com/news)：每週精選對台灣企業有影響的 AI 新聞與企業觀點短評（RSS：https://nordchiou.com/news/rss.xml）
+- [部落格](https://nordchiou.com/blog)：企業 AI 導入實務筆記（RSS：https://nordchiou.com/blog/rss.xml）

@@ -1,0 +1,14 @@
+[
+  { "name": "Anthropic", "url": "https://www.anthropic.com/news", "type": "anthropic-html" },
+  { "name": "OpenAI", "url": "https://openai.com/news/rss.xml", "type": "rss" },
+  { "name": "Google DeepMind", "url": "https://deepmind.google/blog/rss.xml", "type": "rss" },
+  { "name": "Google AI", "url": "https://blog.google/technology/ai/rss/", "type": "rss" },
+  { "name": "Microsoft", "url": "https://news.microsoft.com/source/topics/ai/feed/", "type": "rss" },
+  { "name": "AWS Machine Learning Blog", "url": "https://aws.amazon.com/blogs/machine-learning/feed/", "type": "rss" },
+  { "name": "Hugging Face", "url": "https://huggingface.co/blog/feed.xml", "type": "rss" },
+  { "name": "TechCrunch", "url": "https://techcrunch.com/category/artificial-intelligence/feed/", "type": "rss" },
+  { "name": "The Verge", "url": "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml", "type": "rss" },
+  { "name": "MIT Technology Review", "url": "https://www.technologyreview.com/topic/artificial-intelligence/feed", "type": "rss" },
+  { "name": "iThome", "url": "https://www.ithome.com.tw/rss/tag/AI", "type": "rss" },
+  { "name": "科技新報", "url": "https://technews.tw/category/ai/feed/", "type": "rss" }
+]
