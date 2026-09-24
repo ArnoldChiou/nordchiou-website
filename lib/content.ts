@@ -143,25 +143,35 @@ type HastNode = {
   children?: HastNode[];
 };
 
-// 內文圖片包一層連結，手機上點圖即可開啟原圖放大；圖片也改為延遲載入
+// 內文圖片包一層連結，手機上點圖即可開啟原圖放大；圖片也改為延遲載入。
+// 圖片標題填手機版路徑（以 -mobile.webp/png/jpg 結尾）時，窄螢幕改顯示手機版：
+// ![說明](/content-images/.../pipeline.webp "/content-images/.../pipeline-mobile.webp")
+const MOBILE_IMAGE = /^\/[^\s"]+-mobile\.(webp|png|jpe?g)$/;
+
 function rehypeZoomableImages() {
   const walk = (node: HastNode, insideLink: boolean) => {
     node.children = node.children?.map((child) => {
       if (child.type === "element" && child.tagName === "img") {
-        child.properties = { ...child.properties, loading: "lazy" };
+        const { title, ...rest } = child.properties ?? {};
+        const mobile = typeof title === "string" && MOBILE_IMAGE.test(title) ? title : undefined;
+        child.properties = { ...(mobile ? rest : child.properties), loading: "lazy" };
+        const image: HastNode = mobile
+          ? {
+              type: "element",
+              tagName: "picture",
+              properties: {},
+              children: [{ type: "element", tagName: "source", properties: { media: "(max-width: 700px)", srcSet: mobile }, children: [] }, child],
+            }
+          : child;
         if (!insideLink) {
           return {
             type: "element",
             tagName: "a",
-            properties: {
-              href: child.properties.src,
-              target: "_blank",
-              rel: ["noopener"],
-              className: ["post-image-link"],
-            },
-            children: [child],
+            properties: { href: rest.src, target: "_blank", rel: ["noopener"], className: ["post-image-link"] },
+            children: [image],
           };
         }
+        return image;
       }
       walk(child, insideLink || child.tagName === "a");
       return child;

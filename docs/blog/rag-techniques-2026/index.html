@@ -1,0 +1,127 @@
+<!DOCTYPE html><html lang="zh-Hant"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="preload" href="/logo.png" as="image"/><link rel="preload" href="/content-images/blog/rag-techniques-2026/cover.jpg" as="image"/><link rel="stylesheet" href="/assets/index-Bv86mcCO.css" data-rsc-css-href="/assets/index-Bv86mcCO.css" data-precedence="vite-rsc/importer-resources"/><title>2026 年企業 RAG 怎麼做：6 個真正有用的檢索技術｜諾秋工作室</title><meta name="description" content="RAG 知識庫答不好，問題通常出在「找資料」這一步。這篇整理 2026 年企業實務上最有效的 RAG 技術：長上下文與快取、混合檢索、重新排序、Contextual Retrieval、視覺文件檢索、Agentic RAG，以及 GraphRAG 適合的情境。"/><meta property="og:title" content="2026 年企業 RAG 怎麼做：6 個真正有用的檢索技術｜諾秋工作室"/><meta property="og:description" content="RAG 知識庫答不好，問題通常出在「找資料」這一步。這篇整理 2026 年企業實務上最有效的 RAG 技術：長上下文與快取、混合檢索、重新排序、Contextual Retrieval、視覺文件檢索、Agentic RAG，以及 GraphRAG 適合的情境。"/><meta property="og:url" content="https://nordchiou.com/blog/rag-techniques-2026"/><meta property="og:site_name" content="諾秋工作室"/><meta property="og:type" content="article"/><meta property="og:locale" content="zh_TW"/><meta property="article:published_time" content="2026-09-24"/><meta property="article:modified_time" content="2026-09-24"/><meta property="og:image" content="https://nordchiou.com/content-images/blog/rag-techniques-2026/cover.jpg"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="2026 年企業 RAG 怎麼做：6 個真正有用的檢索技術，以多層篩選把大量文件段落篩成少數相關段落"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="2026 年企業 RAG 怎麼做：6 個真正有用的檢索技術｜諾秋工作室"/><meta name="twitter:description" content="RAG 知識庫答不好，問題通常出在「找資料」這一步。這篇整理 2026 年企業實務上最有效的 RAG 技術：長上下文與快取、混合檢索、重新排序、Contextual Retrieval、視覺文件檢索、Agentic RAG，以及 GraphRAG 適合的情境。"/><meta name="twitter:image" content="https://nordchiou.com/content-images/blog/rag-techniques-2026/cover.jpg"/><link rel="shortcut icon" href="https://nordchiou.com/favicon.ico"/><link rel="icon" href="https://nordchiou.com/favicon.ico"/><link rel="apple-touch-icon" href="https://nordchiou.com/apple-touch-icon.png"/><link rel="canonical" href="https://nordchiou.com/blog/rag-techniques-2026"/></head><body><main><script type="application/ld+json">[{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://nordchiou.com/blog/rag-techniques-2026#article","headline":"2026 年企業 RAG 怎麼做：6 個真正有用的檢索技術","description":"RAG 知識庫答不好，問題通常出在「找資料」這一步。這篇整理 2026 年企業實務上最有效的 RAG 技術：長上下文與快取、混合檢索、重新排序、Contextual Retrieval、視覺文件檢索、Agentic RAG，以及 GraphRAG 適合的情境。","datePublished":"2026-09-24","dateModified":"2026-09-24","inLanguage":"zh-Hant","keywords":"RAG, 知識庫, AI Agent","articleSection":"技術實作","image":"https://nordchiou.com/content-images/blog/rag-techniques-2026/cover.jpg","mainEntityOfPage":"https://nordchiou.com/blog/rag-techniques-2026","author":{"@type":"Organization","@id":"https://nordchiou.com/#organization","name":"諾秋工作室","url":"https://nordchiou.com/"},"publisher":{"@type":"Organization","@id":"https://nordchiou.com/#organization","name":"諾秋工作室","url":"https://nordchiou.com/","logo":{"@type":"ImageObject","url":"https://nordchiou.com/logo.png"}},"isPartOf":{"@id":"https://nordchiou.com/blog#blog"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首頁","item":"https://nordchiou.com/"},{"@type":"ListItem","position":2,"name":"部落格","item":"https://nordchiou.com/blog"},{"@type":"ListItem","position":3,"name":"2026 年企業 RAG 怎麼做：6 個真正有用的檢索技術","item":"https://nordchiou.com/blog/rag-techniques-2026"}]}]</script><div class="nav-wrap"><nav class="nav shell" aria-label="主要導覽"><a href="/" class="brand" aria-label="諾秋工作室首頁"><img class="brand-mark" src="/logo.png" alt="諾秋工作室標誌" width="42" height="42"/><span><strong>諾秋工作室</strong><small>AI SOLUTIONS</small></span></a><div class="nav-links"><a href="/#services">服務</a><a href="/#scenarios">應用情境</a><a href="/#pricing">方案</a><a href="/#work">實績</a><a href="/#about">關於</a><a href="/#faq">常見問題</a><a href="/news">AI 新聞</a><a href="/blog">部落格</a></div><a href="/#contact" class="nav-cta" data-plan="導入診斷">預約診斷 <span aria-hidden="true">→</span></a><details class="mobile-menu"><summary aria-label="開啟導覽選單"><i></i><i></i><i></i></summary><div class="mobile-menu-backdrop" aria-hidden="true"></div><div class="mobile-menu-panel"><nav aria-label="行動版導覽"><a href="/#services">服務</a><a href="/#scenarios">應用情境</a><a href="/#pricing">方案</a><a href="/#work">實績</a><a href="/#about">關於</a><a href="/#faq">常見問題</a><a href="/news">AI 新聞</a><a href="/blog">部落格</a></nav><div class="mobile-menu-actions"><a href="/#contact" class="button primary" data-plan="導入診斷">預約導入診斷 <span>→</span></a><a class="button line" href="https://lin.ee/65uAD7mm" target="_blank" rel="noopener">加 LINE 諮詢 <span>↗</span></a></div></div></details></nav></div><article class="post shell"><nav class="post-crumbs" aria-label="麵包屑"><a href="/">首頁</a><span aria-hidden="true">/</span><a href="/blog">部落格</a></nav><header class="post-header"><h1>2026 年企業 RAG 怎麼做：6 個真正有用的檢索技術</h1><p class="post-lead">RAG 知識庫答不好，問題通常出在「找資料」這一步。這篇整理 2026 年企業實務上最有效的 RAG 技術：長上下文與快取、混合檢索、重新排序、Contextual Retrieval、視覺文件檢索、Agentic RAG，以及 GraphRAG 適合的情境。</p><p class="blog-meta"><span class="blog-category">技術實作</span><time dateTime="2026-09-24">2026 年 9 月 24 日</time><span>約 <!-- -->9<!-- --> 分鐘閱讀</span><span>諾秋工作室</span></p><ul class="blog-tags"><li>RAG</li><li>知識庫</li><li>AI Agent</li></ul></header><img class="post-cover" src="/content-images/blog/rag-techniques-2026/cover.jpg" alt="2026 年企業 RAG 怎麼做：6 個真正有用的檢索技術，以多層篩選把大量文件段落篩成少數相關段落" width="1200" height="630"/><div class="post-body"><p>上一篇〈<a href="/blog/rag-knowledge-base-checklist">導入 RAG 知識庫前，先確認這 5 件事</a>〉談的是導入前的準備。這篇接著談技術：當知識庫已經在規劃，<strong>怎麼讓 AI 真的找得到對的資料、答得出可以查核的答案</strong>。</p>
+<p>先說結論：RAG 系統答錯，多數時候不是模型不夠聰明，而是<strong>一開始就沒找到對的段落</strong>。以下 6 個技術，幾乎都在解決「找資料」這一步。</p>
+<p><a href="/content-images/blog/rag-techniques-2026/pipeline.webp" target="_blank" rel="noopener" class="post-image-link"><picture><source media="(max-width: 700px)" srcset="/content-images/blog/rag-techniques-2026/pipeline-mobile.webp"><img src="/content-images/blog/rag-techniques-2026/pipeline.webp" alt="每個技術用在 RAG 的哪一步：建立索引階段有 Contextual Retrieval、版面感知解析與視覺文件檢索、GraphRAG；檢索與排序階段有混合檢索與重新排序；回答階段附出處；Agentic RAG 橫跨全流程；資料量小可先試長上下文加快取" loading="lazy"></picture></a></p>
+<h2 id="0-先問一句這個案子真的需要-rag-嗎">0. 先問一句：這個案子真的需要 RAG 嗎？</h2>
+<p>2026 年的主流模型，上下文長度已經普遍達到數十萬到上百萬 token。如果你的資料量不大，<strong>直接把整份資料放進提示裡</strong>，往往比建一套檢索系統更簡單、也更準。</p>
+<p>Anthropic 在 2024 年的建議是：知識庫小於約 20 萬 token（大約 500 頁）時，可以直接整份放進提示，再搭配提示快取（prompt caching）降低重複送出的成本與延遲。</p>
+<p>但以下情況，RAG 仍然是比較好的選擇：</p>
+<ul>
+<li><strong>資料量大</strong>：文件多到放不進單次請求，或每次都送全部會太慢、太貴。</li>
+<li><strong>資料常更新</strong>：RAG 只要更新有變動的文件索引，不必每次重送全部內容。</li>
+<li><strong>需要出處與稽核</strong>：要清楚知道每個回答引用了哪一份文件、哪一頁。</li>
+<li><strong>權限不同</strong>：不同部門能查的文件不一樣，必須先依權限篩選再回答。</li>
+</ul>
+<blockquote>
+<p>小型、固定的資料集（例如一份產品手冊）先試「長上下文＋快取」；資料量大、會更新、有權限區分的企業知識庫，才需要完整的 RAG。</p>
+</blockquote>
+<h2 id="1-混合檢索關鍵字與語意一起找">1. 混合檢索：關鍵字與語意一起找</h2>
+<p>早期的 RAG 多半只用<strong>向量搜尋</strong>（依語意相似度找段落）。它擅長理解「換句話說」的問題，卻常漏掉需要<strong>精確比對</strong>的內容，例如：</p>
+<ul>
+<li>料號、型號：<code>A-3021-B</code></li>
+<li>法規條號、合約條款：「第 5 條」</li>
+<li>人名、客戶名、專有名詞</li>
+</ul>
+<p><strong>混合檢索（hybrid search）</strong> 同時跑傳統關鍵字搜尋（例如 BM25）與向量搜尋，再把兩邊的結果合併排序。這幾乎是現在企業 RAG 的標準配備，對料號、規格這類中小企業最常查的內容特別有感。</p>
+<h2 id="2-重新排序rerank先粗找再精挑">2. 重新排序（Rerank）：先粗找，再精挑</h2>
+<p>檢索通常會先撈出幾十個候選段落，但真正相關的可能只有前幾個。<strong>重新排序模型（reranker）</strong> 會把「問題」和「每個候選段落」放在一起逐一評分，把最相關的排到最前面，再交給模型回答。</p>
+<p>它比第一輪檢索慢，所以只用在已經篩過的少量候選上。實務上，加一層 rerank 往往是<strong>投入最少、效果最明顯</strong>的改善之一。</p>
+<h2 id="3-contextual-retrieval讓每個段落知道自己在講什麼">3. Contextual Retrieval：讓每個段落「知道自己在講什麼」</h2>
+<p>文件切成小段後，很多段落會失去上下文。例如一段寫著「本季營收成長 3%」，單獨看根本不知道是哪家公司、哪一季。</p>
+<p><strong>Contextual Retrieval</strong> 的做法是：建立索引前，先讓模型為每個段落補上一小段說明（例如「這段出自 A 公司 2026 年第二季財報的營收章節」），再拿補充後的內容去建立向量索引與關鍵字索引。</p>
+<p>Anthropic 在提出這個方法時公布的測試結果（以前 20 個檢索結果中是否找到正確段落為準）：</p>
+<table>
+<thead>
+<tr>
+<th>做法</th>
+<th>檢索失敗率降低</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>只用補充說明後的向量索引</td>
+<td>35%</td>
+</tr>
+<tr>
+<td>補充說明＋關鍵字（BM25）混合檢索</td>
+<td>49%</td>
+</tr>
+<tr>
+<td>再加上重新排序</td>
+<td>67%</td>
+</tr>
+</tbody>
+</table>
+<p>這組數字來自 Anthropic 的測試資料集，實際效果會因你的文件而不同；但它清楚說明了一件事：<strong>前面三個技術可以疊加使用，效果會一路累積</strong>。</p>
+<h2 id="4-視覺文件檢索掃描檔表格與圖表也能查">4. 視覺文件檢索：掃描檔、表格與圖表也能查</h2>
+<p>台灣企業的文件，有很大一部分是掃描 PDF、Excel 轉出來的表格、夾帶圖表的簡報。傳統做法是先做文字辨識（OCR）再切段落，但表格結構、圖表內容常在這一步就遺失了。</p>
+<p>兩個方向可以改善：</p>
+<ul>
+<li><strong>版面感知的文件解析</strong>：保留標題層級、表格欄位與頁碼，而不是把整頁壓成一串文字。</li>
+<li><strong>視覺文件檢索</strong>：以 <a href="https://arxiv.org/abs/2407.01449">ColPali</a> 為代表，直接把「頁面圖片」拿來建立索引與比對，跳過容易出錯的文字辨識；它延續了 <a href="https://arxiv.org/abs/2004.12832">ColBERT</a> 的 late interaction 檢索方式。這類方法近兩年發展很快，特別適合版面複雜的規格書、型錄與報表。</li>
+</ul>
+<p>導入前可以先抽 20 份最常被查的文件，看看它們是不是以掃描檔或表格為主，再決定要不要投資這一塊。</p>
+<h2 id="5-agentic-rag讓-ai-自己決定要查什麼查幾次">5. Agentic RAG：讓 AI 自己決定要查什麼、查幾次</h2>
+<p>傳統 RAG 是固定流程：收到問題 → 檢索一次 → 回答。遇到需要多步推理的問題就容易卡住，例如：</p>
+<blockquote>
+<p>「上個月延遲出貨的訂單，有哪些客戶的合約有違約金條款？」</p>
+</blockquote>
+<p>這需要先查出貨紀錄、找出延遲的訂單與客戶，再逐一查合約。<strong>Agentic RAG</strong> 讓模型像人一樣工作：</p>
+<ul>
+<li><strong>自己改寫問題、拆成多個子問題</strong>，分次檢索。</li>
+<li><strong>判斷資料夠不夠</strong>，不夠就換關鍵字再查，而不是硬答。</li>
+<li><strong>透過工具查即時系統</strong>：例如用 <a href="https://modelcontextprotocol.io/">MCP（Model Context Protocol）</a> 這類標準介面連接 ERP、資料庫，而不只查靜態文件。</li>
+</ul>
+<p>代價是每個問題會花比較多的時間與模型費用，所以適合用在<strong>高價值、多步驟</strong>的查詢，而不是每一個簡單問題。這也是我們在 AI Agent 專案中最常搭配的做法：簡單問題走快速檢索，複雜問題再交給 Agent。</p>
+<h2 id="6-graphrag適合關係型問題但先別急著上">6. GraphRAG：適合「關係」型問題，但先別急著上</h2>
+<p>一般 RAG 找的是「最相關的段落」。但有些問題的答案不在任何一段文字裡，而在<strong>資料之間的關係</strong>，例如：</p>
+<ul>
+<li>「哪些規章引用了這條已經廢止的規定？」</li>
+<li>「這個零件的供應商，還供貨給我們哪些產品線？」</li>
+</ul>
+<p><strong>GraphRAG</strong> 會先把文件裡的人、事、物與它們的關係整理成知識圖譜，再依圖譜回答，微軟的 <a href="https://github.com/microsoft/graphrag">GraphRAG</a> 是代表性的開源實作。它擅長跨文件彙整與關係推理，但建立與維護圖譜的成本明顯高於一般 RAG，也需要依產業調整。</p>
+<p>我們的建議是：<strong>先把前面幾項做好</strong>，確認真的有大量「關係型」問題答不好，再評估要不要導入 GraphRAG。</p>
+<h2 id="怎麼挑依情況建議的組合">怎麼挑：依情況建議的組合</h2>
+<table>
+<thead>
+<tr>
+<th>你的情況</th>
+<th>建議先做</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>資料不多（幾百頁內）、很少更新</td>
+<td>長上下文＋提示快取，先不建 RAG</td>
+</tr>
+<tr>
+<td>常查料號、規格、條號</td>
+<td>混合檢索＋重新排序</td>
+</tr>
+<tr>
+<td>文件切段後常「答非所問」</td>
+<td>Contextual Retrieval</td>
+</tr>
+<tr>
+<td>掃描 PDF、表格、型錄很多</td>
+<td>版面感知解析或視覺文件檢索</td>
+</tr>
+<tr>
+<td>問題需要跨文件、跨系統多步查詢</td>
+<td>Agentic RAG，搭配工具連接既有系統</td>
+</tr>
+<tr>
+<td>大量「誰和誰有關」的問題</td>
+<td>評估 GraphRAG</td>
+</tr>
+</tbody>
+</table>
+<p>不論用哪一種，都別忘了上一篇提到的兩件事：<strong>回答要附出處</strong>，以及<strong>用測試題庫驗證</strong>每一次調整是否真的變好。技術選對了，還是要用數據確認。</p>
+<p>如果你不確定自己的資料適合哪一種做法，可以從<strong>導入診斷</strong>開始：我們會抽樣你的文件與常見問題，實際評估哪些技術值得投入。</p>
+<h2 id="參考資料">參考資料</h2>
+<ul>
+<li>Anthropic，〈<a href="https://www.anthropic.com/news/contextual-retrieval">Introducing Contextual Retrieval</a>〉，2024</li>
+<li>Faysse et al.，〈<a href="https://arxiv.org/abs/2407.01449">ColPali: Efficient Document Retrieval with Vision Language Models</a>〉，2024</li>
+<li>Khattab &#x26; Zaharia，〈<a href="https://arxiv.org/abs/2004.12832">ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction over BERT</a>〉，2020</li>
+<li>Microsoft，<a href="https://github.com/microsoft/graphrag">GraphRAG</a></li>
+<li><a href="https://modelcontextprotocol.io/">Model Context Protocol</a></li>
+</ul></div><aside class="post-cta"><p class="kicker">NEXT STEP</p><h2>想知道你的流程適不適合導入 AI？</h2><p>從導入診斷開始：盤點流程與資料現況，評估可行性與預期效益，再決定要不要進入開發。</p><div class="post-cta-actions"><a href="/#contact" class="button primary" data-plan="導入診斷">預約導入診斷 <span>→</span></a><a href="/blog" class="button secondary">看更多<!-- -->部落格</a></div></aside></article><footer class="footer shell"><div class="brand"><img class="brand-mark" src="/logo.png" alt="諾秋工作室標誌" width="42" height="42"/><span><strong>諾秋工作室</strong><small>NORDCHIOU STUDIO</small></span></div><p>統一編號 00884771</p><p>© 2026 諾秋工作室. All rights reserved.</p></footer></main></body></html>
