@@ -24,6 +24,6 @@ export function SiteNav() {
 
 export function SiteFooter() {
   return (
-    <footer className="footer shell"><div className="brand"><img className="brand-mark" src="/logo.png" alt="諾秋工作室標誌" width={42} height={42} /><span><strong>諾秋工作室</strong><small>NORDCHIOU STUDIO</small></span></div><p>統一編號 00884771</p><p>© 2026 諾秋工作室. All rights reserved.</p></footer>
+    <footer className="footer shell"><div className="brand"><img className="brand-mark" src="/logo.png" alt="諾秋工作室標誌" width={42} height={42} /><span><strong>諾秋工作室</strong><small>NORDCHIOU STUDIO</small></span></div><p>統一編號 00884771<span aria-hidden="true"> · </span><Link href="/privacy-policy">隱私權政策</Link></p><p>© 2026 諾秋工作室. All rights reserved.</p></footer>
   );
 }

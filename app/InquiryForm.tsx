@@ -130,6 +130,9 @@ export default function InquiryForm({ plans }: { plans: string[] }) {
         </button>
       </div>
       <p className="inquiry-note">
+        送出前請先閱讀<a href="/privacy-policy">隱私權政策</a>，資料僅用於回覆諮詢，不會寄送行銷訊息。
+      </p>
+      <p className="inquiry-note">
         或直接來信 <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
         <button
           className="inquiry-link"

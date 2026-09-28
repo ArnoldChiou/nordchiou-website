@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { type Collection, getPosts } from "@/lib/content";
-import { SITE_URL } from "@/lib/site";
+import { PRIVACY_UPDATED, SITE_URL } from "@/lib/site";
 
 // 首頁內容變更時請同步更新
 const HOME_UPDATED = "2026-09-23";
@@ -22,5 +22,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/`, lastModified: HOME_UPDATED },
     ...section("blog"),
     ...section("news"),
+    { url: `${SITE_URL}/privacy-policy`, lastModified: PRIVACY_UPDATED },
   ];
 }
