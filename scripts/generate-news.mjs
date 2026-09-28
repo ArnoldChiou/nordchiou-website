@@ -1,5 +1,6 @@
 // 每週 AI 新聞週報草稿：抓取 RSS → Claude 挑選並撰寫摘要 → 輸出 Markdown
-// 用法：node scripts/generate-news.mjs [--draft] [--dry-run] [--days=7]
+// 用法：node scripts/generate-news.mjs [--draft] [--dry-run] [--force]
+// 每期固定收錄「上週一 00:00 到週日 24:00（台灣時間）」的新聞，各期範圍不重疊
 //   --draft    輸出到 content/news/drafts/（本機預覽用）
 //   --dry-run  只抓新聞並列出候選清單，不呼叫 Claude
 //   --force    同一週的週報已存在時仍重新產生
@@ -15,8 +16,6 @@ const args = process.argv.slice(2);
 const DRAFT = args.includes("--draft");
 const DRY_RUN = args.includes("--dry-run");
 const FORCE = args.includes("--force");
-const DAYS = Number(args.find((arg) => arg.startsWith("--days="))?.split("=")[1] ?? 7);
-if (!Number.isInteger(DAYS) || DAYS < 1 || DAYS > 31) throw new Error("--days 必須是 1–31 的整數");
 const MAX_ITEMS = 8;
 const MAX_PER_SOURCE = 15;
 const MODEL = "claude-opus-5";
@@ -24,7 +23,6 @@ const MODEL = "claude-opus-5";
 const root = process.cwd();
 const newsDir = join(root, "content", "news");
 const sources = JSON.parse(await readFile(join(root, "scripts", "news-sources.json"), "utf8"));
-const since = Date.now() - DAYS * 24 * 60 * 60 * 1000;
 
 const stripHtml = (text = "") =>
   String(text)
@@ -110,6 +108,27 @@ function parseAnthropicHtml(source, body) {
   return items;
 }
 
+// 讀取已發布的週報（排除本期，方便 --force 重新產生），新到舊排序
+async function publishedIssues(currentSlug) {
+  let files = [];
+  try {
+    files = await readdir(newsDir);
+  } catch {
+    return [];
+  }
+  const issues = [];
+  for (const file of files.filter((name) => name.endsWith(".md") && name !== `${currentSlug}.md`)) {
+    // Windows 取出的檔案可能是 CRLF，先統一換行
+    const body = (await readFile(join(newsDir, file), "utf8")).replace(/\r\n/g, "\n");
+    const date = body.match(/^date:\s*"?(\d{4}-\d{2}-\d{2})"?/m)?.[1];
+    if (!date) continue;
+    // 每則新聞的標題與摘要第一句，給模型判斷是否為同一事件
+    const items = [...body.matchAll(/^## \d+\. (.+)\n\n.*\n\n(.+)$/gm)].map(([, headline, summary]) => `${headline.replace(/\\/g, "")}：${summary.replace(/\\/g, "").split("。")[0]}`);
+    issues.push({ date, items });
+  }
+  return issues.sort((a, b) => b.date.localeCompare(a.date));
+}
+
 // 已經出現在過去週報裡的連結不再重複收錄
 async function usedLinks() {
   const links = new Set();
@@ -128,14 +147,14 @@ async function usedLinks() {
   return links;
 }
 
-async function collectCandidates() {
+async function collectCandidates(start, end) {
   const used = await usedLinks();
   const results = await Promise.allSettled(
     sources.map(async (source) => {
       const body = await fetchText(source.url);
       const items = source.type === "anthropic-html" ? parseAnthropicHtml(source, body) : parseFeed(source, body);
       return items
-        .filter((item) => item.title && item.link && item.date >= since && !used.has(canonical(item.link)))
+        .filter((item) => item.title && item.link && item.date >= start && item.date < end && !used.has(canonical(item.link)))
         .sort((a, b) => b.date - a.date)
         .slice(0, MAX_PER_SOURCE);
     }),
@@ -162,7 +181,9 @@ async function collectCandidates() {
     .map((item, id) => ({ id, ...item }));
 }
 
-// 以台灣時間計算 ISO 週次
+const taipeiDate = (timestamp) => new Date(timestamp + 8 * 60 * 60 * 1000).toISOString().slice(0, 10);
+
+// 以台灣時間計算本週 ISO 週次（期數）與收錄範圍（上週一 00:00 到本週一 00:00）
 function weekInfo(now = new Date()) {
   const taipei = new Date(now.getTime() + 8 * 60 * 60 * 1000);
   const day = taipei.getUTCDay() || 7;
@@ -170,8 +191,9 @@ function weekInfo(now = new Date()) {
   const year = thursday.getUTCFullYear();
   const week = Math.ceil(((thursday - Date.UTC(year, 0, 1)) / 86400000 + 1) / 7);
   const today = taipei.toISOString().slice(0, 10);
-  const from = new Date(taipei.getTime() - DAYS * 86400000).toISOString().slice(0, 10);
-  return { year, week, today, from };
+  const end = Date.UTC(taipei.getUTCFullYear(), taipei.getUTCMonth(), taipei.getUTCDate() - (day - 1)) - 8 * 60 * 60 * 1000;
+  const start = end - 7 * 24 * 60 * 60 * 1000;
+  return { year, week, today, start, end, from: taipeiDate(start), to: taipeiDate(end - 1) };
 }
 
 const CATEGORIES = ["模型與產品", "企業應用", "開源與工具", "政策與法規", "產業動態"];
@@ -215,11 +237,13 @@ const SYSTEM = `你是「諾秋工作室」AI 新聞週報的編輯。諾秋工�
 - 只根據候選資料中的標題與摘要撰寫，不要補充資料中沒有的數字、日期、價格或引述；資訊不足時寫得保守一點。
 - 摘要寫事實，「對企業的意義」寫你的專業判斷，兩者不要混在一起。
 - 語氣專業、直接、不誇大，不使用「震撼」「顛覆」之類的形容詞。
-- 依重要性由高到低排序。`;
+- 依重要性由高到低排序。
+- 使用者訊息會附上前幾期已報導的新聞。同一事件即使換了媒體或角度，也不要再選；只有出現重大新進展（例如正式上線、價格或政策變動）時才可選，並在標題與摘要中明確寫出這是後續進展。`;
 
-function userPrompt(candidates) {
-  const payload = candidates.map(({ id, source, title, link, date, snippet }) => ({ id, source, title, date: new Date(date).toISOString().slice(0, 10), snippet, domain: new URL(link).hostname }));
-  return `以下是過去 ${DAYS} 天的候選新聞（JSON）：\n\n${JSON.stringify(payload)}`;
+function userPrompt(candidates, covered) {
+  const payload = candidates.map(({ id, source, title, link, date, snippet }) => ({ id, source, title, date: taipeiDate(date), snippet, domain: new URL(link).hostname }));
+  const history = covered.length ? `前幾期已報導過的新聞（不要重複選同一事件）：\n${covered.map((item) => `- ${item}`).join("\n")}\n\n` : "";
+  return `${history}以下是本期的候選新聞（JSON）：\n\n${JSON.stringify(payload)}`;
 }
 
 async function writeDigestWithApi(candidates) {
@@ -233,7 +257,7 @@ async function writeDigestWithApi(candidates) {
       thinking: { type: "adaptive" },
       output_config: { effort: "medium", format: { type: "json_schema", schema: SCHEMA } },
       system: SYSTEM,
-      messages: [{ role: "user", content: userPrompt(candidates) }],
+      messages: [{ role: "user", content: userPrompt(candidates, covered) }],
     })
     .finalMessage();
 
@@ -254,7 +278,7 @@ async function writeDigestWithClaudeCode(candidates) {
     child.stdout.on("data", (chunk) => (stdout += chunk));
     child.on("error", (error) => reject(error.code === "ENOENT" ? new Error("找不到 claude 指令：請安裝 Claude Code，或設定 ANTHROPIC_API_KEY 改走 API") : error));
     child.on("close", (code) => (code === 0 ? resolve(stdout) : reject(new Error(`claude -p 結束代碼 ${code}：${stdout.slice(0, 500)}`))));
-    child.stdin.end(userPrompt(candidates));
+    child.stdin.end(userPrompt(candidates, covered));
   });
   const result = JSON.parse(output);
   if (result.is_error || !result.structured_output) throw new Error(`Claude Code 未回傳結構化結果：${String(result.result ?? result.subtype ?? "").slice(0, 500)}`);
@@ -290,11 +314,11 @@ function toMarkdown(digest, candidates, info) {
     .slice(0, MAX_ITEMS);
   if (items.length < 3) throw new Error(`有效新聞只有 ${items.length} 則，不產生週報`);
   const [, fm, fd] = info.from.split("-");
-  const [, tm, td] = info.today.split("-");
+  const [, tm, td] = info.to.split("-");
   const title = `AI 新聞週報｜${info.year} 年第 ${info.week} 週（${Number(fm)}/${Number(fd)}–${Number(tm)}/${Number(td)}）`;
   const sections = items.map((item, index) => {
     const origin = byId.get(item.id);
-    const date = new Date(origin.date).toISOString().slice(0, 10);
+    const date = taipeiDate(origin.date);
     return [`## ${index + 1}. ${plain(item.headline)}`, "", `**${plain(item.category)}**｜來源：[${plain(origin.source)}](${origin.link})｜${date}`, "", plain(item.summary), "", `> **對企業的意義**：${plain(item.takeaway)}`].join("\n");
   });
   return {
@@ -320,34 +344,44 @@ function toMarkdown(digest, candidates, info) {
   };
 }
 
-const info = weekInfo();
+// NEWS_NOW 可指定「現在」的時間，用於測試或補產過去某一期
+const info = weekInfo(process.env.NEWS_NOW ? new Date(process.env.NEWS_NOW) : undefined);
 const slug = `${info.year}-w${String(info.week).padStart(2, "0")}`;
+// 前兩期已報導的新聞交給模型比對，避免同一事件換個媒體又被選進來
+const covered = (await publishedIssues(slug)).slice(0, 2).flatMap((issue) => issue.items);
 const published = join(newsDir, `${slug}.md`);
-if (!DRY_RUN && !FORCE && existsSync(published)) {
-  console.log(`${slug} 已發布，略過（要重新產生請加 --force）`);
-  process.exit(0);
-}
-const candidates = await collectCandidates();
-console.log(`共 ${candidates.length} 則候選新聞（${info.from} 起）`);
 
-if (DRY_RUN) {
-  for (const item of candidates) console.log(`- [${item.source}] ${new Date(item.date).toISOString().slice(0, 10)} ${item.title}`);
-  process.exit(0);
-}
-if (candidates.length < 5) {
-  console.error("候選新聞太少，本週不產生週報");
-  process.exit(1);
+async function main() {
+  if (!DRY_RUN && !FORCE && existsSync(published)) {
+    console.log(`${slug} 已發布，略過（要重新產生請加 --force）`);
+    return 0;
+  }
+  const candidates = await collectCandidates(info.start, info.end);
+  console.log(`共 ${candidates.length} 則候選新聞（${info.from}–${info.to}）`);
+
+  if (DRY_RUN) {
+    for (const item of candidates) console.log(`- [${item.source}] ${taipeiDate(item.date)} ${item.title}`);
+    return 0;
+  }
+  if (candidates.length < 5) {
+    console.error("候選新聞太少，本週不產生週報");
+    return 1;
+  }
+
+  const digest = await writeDigest(candidates);
+  const { title, count, body } = toMarkdown(digest, candidates, info);
+  const dir = DRAFT ? join(newsDir, "drafts") : newsDir;
+  await mkdir(dir, { recursive: true });
+  const file = join(dir, `${slug}.md`);
+  await writeFile(file, body, "utf8");
+  console.log(`已輸出 ${count} 則新聞：${file}`);
+
+  // 提供給 GitHub Actions 建立 PR 使用
+  if (process.env.GITHUB_OUTPUT) {
+    await appendFile(process.env.GITHUB_OUTPUT, `slug=${slug}\ntitle=${title}\ncount=${count}\n`);
+  }
+  return 0;
 }
 
-const digest = await writeDigest(candidates);
-const { title, count, body } = toMarkdown(digest, candidates, info);
-const dir = DRAFT ? join(newsDir, "drafts") : newsDir;
-await mkdir(dir, { recursive: true });
-const file = join(dir, `${slug}.md`);
-await writeFile(file, body, "utf8");
-console.log(`已輸出 ${count} 則新聞：${file}`);
-
-// 提供給 GitHub Actions 建立 PR 使用
-if (process.env.GITHUB_OUTPUT) {
-  await appendFile(process.env.GITHUB_OUTPUT, `slug=${slug}\ntitle=${title}\ncount=${count}\n`);
-}
+// 不直接呼叫 process.exit：Windows 上網路連線還在關閉時會觸發 libuv 斷言錯誤
+process.exitCode = await main();
