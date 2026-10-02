@@ -1,6 +1,6 @@
 ---
 title: "OpenClaw、Hermes Agent 怎麼選？2026 開源自架 AI Agent 比較與安全指南"
-description: "OpenClaw 爆紅之後，Hermes Agent、NanoClaw、ZeroClaw、Nanobot 一一出現。這篇說明這類「住在你電腦上」的開源 AI Agent 是什麼、五個主流專案差在哪，以及安裝前一定要先做好的安全設定。"
+description: "OpenClaw 爆紅之後，Hermes Agent、NanoClaw、ZeroClaw、Nanobot，以及 NVIDIA 的 NemoClaw 一一出現。這篇說明這類「住在你電腦上」的開源 AI Agent 是什麼、五個主流專案差在哪，以及安裝前一定要先做好的安全設定。"
 date: "2026-10-02"
 category: "產業觀察"
 cover: "/content-images/blog/open-source-ai-agents/cover.jpg"
@@ -10,7 +10,7 @@ tags: ["AI Agent", "OpenClaw", "開源"]
 
 2026 年初，一隻「龍蝦」讓整個 AI 圈陷入瘋狂。開源專案 OpenClaw 在一月底單日暴增兩萬多顆 GitHub 星，很多人特地買一台 Mac mini，只為了讓它 24 小時待命：在 Telegram 傳一句話，它就幫你回信、整理檔案、查資料、定時寄報告。
 
-緊接著，Hermes Agent、NanoClaw、ZeroClaw、Nanobot 這些替代品一一出現；同一時間，惡意技能、大量暴露在網路上的實例、政府禁用令，也讓「安全」成為討論這類工具時繞不開的話題。
+緊接著，Hermes Agent、NanoClaw、ZeroClaw、Nanobot 這些替代品一一出現，連 NVIDIA 都推出了 NemoClaw；同一時間，惡意技能、大量暴露在網路上的實例、政府禁用令，也讓「安全」成為討論這類工具時繞不開的話題。
 
 先說結論：
 
@@ -72,7 +72,11 @@ _星數為 2026 年 10 月初 GitHub 上的數字，僅反映熱門程度，不�
 
 NanoClaw 的作者直接點出 OpenClaw 的問題：將近 50 萬行程式碼、53 個設定檔、70 多個相依套件，沒有人真的看得完。NanoClaw 的做法是**只保留一個程序和少數幾個檔案**，並建構在 Anthropic 的 Claude Agent SDK 上。
 
-它的安全模型很直接：**每個 Agent 都跑在獨立的 Linux 容器裡，只能看到你明確掛載進去的資料夾**。權限邊界由作業系統的容器隔離保證，而不是靠程式內部的權限檢查。通訊軟體方面也支援 WhatsApp、Telegram、Slack、Teams、微信等。
+**Claude Agent SDK 是什麼？** 可以用「引擎與車」來理解。一個 Agent 最難寫的部分是它的「引擎」：讓模型規劃步驟、呼叫工具、看結果、再決定下一步的循環（agent loop），還有對話太長時如何壓縮記憶、哪些動作要先問過人。Anthropic 自家的程式開發工具 Claude Code，就是用這具引擎打造的一台車；而 Claude Agent SDK（SDK 是 Software Development Kit，開發套件）則是把**同一具引擎單獨拿出來**，讓其他開發者裝進自己設計的車身裡。
+
+NanoClaw 正是這樣做的：引擎直接用 Anthropic 已經打磨過的版本，自己只負責車身——串接通訊軟體、把 Agent 關進容器。這就是它的程式碼能少到只有幾個檔案的原因。代價是這具引擎是為 Claude 模型設計的，基本上只能搭配 Claude 使用，不像 OpenClaw、Hermes 可以自由切換 GPT、DeepSeek 或本地模型。
+
+它的安全模型很直接：**每個 Agent 都跑在獨立的 Linux 容器（container，可以想成一間與主機隔開的小房間）裡，只能看到你明確掛載（mount，也就是指定放進房間）的資料夾**。權限邊界由作業系統的容器隔離保證，而不是靠程式內部的權限檢查。通訊軟體方面也支援 WhatsApp、Telegram、Slack、Teams、微信等。
 
 適合：在意安全、能接受以 Claude 為主要模型的使用者。
 
@@ -89,6 +93,20 @@ ZeroClaw 用 Rust 開發，編譯成單一執行檔，資源占用極低，適�
 由香港大學數據智能實驗室（HKUDS）開發，核心是一個精簡、可讀的 Agent 迴圈，支援長期記憶、MCP、多 Agent 協作、排程，以及 OpenAI 相容的 API 與 Python SDK，方便整合進自己的系統。
 
 但它**沒有完整的沙箱設計**，比較適合當作學習 Agent 原理的範本，或是在受信任的內部環境裡二次開發。
+
+### 補充：NVIDIA NemoClaw，不是另一隻龍蝦，而是安全外殼
+
+常和上面幾個專案一起被提到的，還有 NVIDIA 在 2026 年 3 月 GTC 大會發表的 **NemoClaw**。但它的定位不太一樣：**NemoClaw 本身不是 Agent，而是讓 OpenClaw、Hermes 這些 Agent 更安全運行的一套環境**。
+
+它把三樣東西包成一行指令就能安裝的組合：
+
+- **OpenShell 沙箱**：NVIDIA 的隔離執行環境，Agent 在容器裡執行，檔案存取與對外連線都受政策控管；要連到新的外部服務時，需要管理者核准。
+- **本地模型 Nemotron**：可以把模型跑在自己的 NVIDIA 顯示卡或工作站上，資料不必送到雲端。
+- **隱私路由（privacy router）**：需要更強的雲端模型時，由它決定哪些請求可以送出去、哪些只能在本機處理。
+
+目前支援 OpenClaw（預設）、Hermes 與 LangChain Deep Agents，可以跑在 GeForce RTX 電腦、RTX PRO 工作站與 DGX 系列上，以 Apache 2.0 授權開源。
+
+換句話說，NemoClaw 想解決的正是第 3 節談的問題：**Agent 本身照用，但把它關進有圍欄的空間裡**。對想在公司內部試行、又有 NVIDIA 硬體的團隊，這是值得關注的方向。不過官方仍標示為 **alpha（早期測試）階段**，正式使用前要有心理準備，設定與行為都可能還會變動。
 
 ## 3. 安全：這一類工具最該先談的事
 
@@ -107,7 +125,7 @@ OpenClaw 在 2026 年初幾乎是以「安全事件」的速度爆紅：
 具體來說：
 
 1. **用獨立的機器或容器**：不要裝在存有公司資料、網銀登入、密碼管理器的主力電腦上。一台專用的小主機、虛擬機或雲端主機，出事時影響範圍有限。
-2. **打開沙箱隔離**：OpenClaw 要自己設定；Hermes 選 Docker 或 SSH 執行環境；NanoClaw、ZeroClaw 預設就有隔離。
+2. **打開沙箱隔離**：OpenClaw 要自己設定；Hermes 選 Docker 或 SSH 執行環境；NanoClaw、ZeroClaw 預設就有隔離；有 NVIDIA 硬體的話，也可以用 NemoClaw 把 OpenClaw 或 Hermes 包進 OpenShell 沙箱。
 3. **不要把管理介面公開到網路**：需要從外面連回去，用 VPN 或 Tailscale 這類私有網路，而不是直接開放連接埠。
 4. **只裝看得懂的技能**：技能本質上就是會被執行的指令。安裝前打開來看一遍，特別小心要求你「先執行某段指令」或「先下載某個檔案」的技能。
 5. **專用帳號、最小權限**：給它一個專用的 Email 和雲端硬碟帳號，而不是你的主要帳號；API 金鑰設定用量上限。
@@ -115,13 +133,14 @@ OpenClaw 在 2026 年初幾乎是以「安全事件」的速度爆紅：
 
 ## 4. 該選哪一個？
 
-| 你的情況                                     | 建議                              |
-| -------------------------------------------- | --------------------------------- |
-| 想要功能最完整、教學最多、要接 LINE          | OpenClaw（務必做好第 3 節的設定） |
-| 想要長期使用、越用越聰明，或從 OpenClaw 搬家 | Hermes Agent                      |
-| 最在意安全，主要用 Claude                    | NanoClaw                          |
-| 要跑在低規格主機或物聯網裝置               | ZeroClaw                          |
-| 想學 Agent 原理，或整合進自己的 Python 系統  | Nanobot                           |
+| 你的情況                                                    | 建議                                |
+| ----------------------------------------------------------- | ----------------------------------- |
+| 想要功能最完整、教學最多、要接 LINE                         | OpenClaw（務必做好第 3 節的設定）   |
+| 想要長期使用、越用越聰明，或從 OpenClaw 搬家                | Hermes Agent                        |
+| 最在意安全，主要用 Claude                                   | NanoClaw                            |
+| 要跑在低規格主機或物聯網裝置                                | ZeroClaw                            |
+| 想學 Agent 原理，或整合進自己的 Python 系統                 | Nanobot                             |
+| 想用 OpenClaw 或 Hermes，但要更嚴格的隔離，且有 NVIDIA 硬體 | NemoClaw（搭配 OpenClaw 或 Hermes） |
 
 ### 企業適合直接用嗎？
 
@@ -151,6 +170,7 @@ OpenClaw 的爆紅證明了一件事：大家想要的不只是一個會聊天�
 - NanoClaw，[GitHub 專案頁](https://github.com/qwibitai/nanoclaw)
 - ZeroClaw，[GitHub 專案頁](https://github.com/zeroclaw-labs/zeroclaw)
 - HKUDS，[Nanobot GitHub 專案頁](https://github.com/HKUDS/nanobot)
+- NVIDIA，〈[NVIDIA Announces NemoClaw for the OpenClaw Community](https://nvidianews.nvidia.com/news/nvidia-announces-nemoclaw)〉，2026，以及 [NemoClaw GitHub 專案頁](https://github.com/NVIDIA/NemoClaw)
 - The Hacker News，〈[Researchers Find 341 Malicious ClawHub Skills Stealing Data from OpenClaw Users](https://thehackernews.com/2026/02/researchers-find-341-malicious-clawhub.html)〉，2026
 - Palo Alto Networks Unit 42，〈[OpenClaw's Skill Marketplace and the Emerging AI Supply Chain Threat](https://unit42.paloaltonetworks.com/openclaw-ai-supply-chain-risk/)〉
 - Pinggy，〈[Best OpenClaw Alternatives in 2026](https://pinggy.io/blog/best_openclaw_alternatives/)〉
