@@ -33,9 +33,6 @@ export function getBlogTopic(slug: string): BlogTopic | undefined {
   return BLOG_TOPICS.find((topic) => topic.slug === slug);
 }
 
-// 主題頁的建議閱讀順序：先看決策與觀念，再看技術細節
-export const TOPIC_READING_ORDER: readonly BlogCategory[] = ["導入規劃", "產業觀察", "案例分享", "技術實作"];
-
 // 標籤統一寫法：key 為小寫的常見寫法，value 為網站上顯示的標準寫法
 const TAG_ALIASES: Record<string, string> = {
   rag: "RAG",

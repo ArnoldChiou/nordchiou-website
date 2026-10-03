@@ -35,7 +35,7 @@ node scripts/generate-news.mjs --dry-run   # 只列候選新聞，不呼叫 Clau
   - 必填：`title`、`description`、`date`；有 `cover` 就必須有 `coverAlt`。
   - 部落格另外必填 `category`（`lib/taxonomy.ts` 的 `BLOG_CATEGORIES`）與 `topic`（`BLOG_TOPICS` 的 slug）。
   - `tags` 會經 `normalizeTag` 統一寫法（別名表在 `lib/taxonomy.ts`）。
-- 新增部落格主題：在 `BLOG_TOPICS` 加一筆即可，主題頁 `/blog/topic/<slug>`、選單與 sitemap 會自動產生（只列出有文章的主題）。主題頁依 `TOPIC_READING_ORDER`（導入規劃→產業觀察→案例分享→技術實作）再依日期排序。
+- 新增部落格主題：在 `BLOG_TOPICS` 加一筆即可，主題頁 `/blog/topic/<slug>`、選單與 sitemap 會自動產生（只列出有文章的主題）。主題頁依發布日期由舊到新排序（「第 N 篇」即依此編號）。
 - 頁面渲染集中在 `app/ContentPages.tsx`：部落格與新聞共用同一套元件，以 `SectionConfig`（`BLOG`、`NEWS`）區分；`app/blog/**`、`app/news/**` 的 page 檔只是薄包裝。metadata、JSON-LD、RSS 也都在這裡產生。
 - Markdown 圖片慣例：`![替代文字](/content-images/.../x.webp "/content-images/.../x-mobile.webp")`，title 填手機版路徑時，窄螢幕會自動換成手機版圖片（`rehypeZoomableImages`）。圖片放 `public/content-images/<blog|news>/<slug>/`，部落格內文圖通常為 1600×900 桌機版加 900 寬的手機版 webp，封面為 1200×630 的 `cover.jpg`。
 

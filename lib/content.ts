@@ -15,7 +15,6 @@ import {
   isBlogCategory,
   isBlogTopic,
   normalizeTag,
-  TOPIC_READING_ORDER,
 } from "./taxonomy";
 
 export type Collection = "blog" | "news";
@@ -148,11 +147,9 @@ export function getPost(
 }
 
 export function getTopicPosts(topic: BlogTopicSlug): Post[] {
-  const rank = (post: Post) =>
-    post.category ? TOPIC_READING_ORDER.indexOf(post.category) : TOPIC_READING_ORDER.length;
   return posts.blog
     .filter((post) => post.topic === topic)
-    .sort((a, b) => rank(a) - rank(b) || a.date.localeCompare(b.date) || a.slug.localeCompare(b.slug));
+    .sort((a, b) => a.date.localeCompare(b.date) || a.slug.localeCompare(b.slug));
 }
 
 type HastNode = {

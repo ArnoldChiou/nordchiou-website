@@ -192,7 +192,7 @@ export function TopicIndex({ slug }: { slug: string }) {
       </header>
       <TopicNav active={topic.slug} />
       <section className="shell blog-list" aria-label={`${topic.name}文章列表`}>
-        <p className="topic-order-note">依建議閱讀順序排列：先看觀念與規劃，再看技術細節。</p>
+        <p className="topic-order-note">依發布日期排列，由最早的一篇開始。</p>
         {posts.map((post, index) => <PostCard key={post.slug} section={BLOG} post={post} step={index + 1} />)}
       </section>
       <SiteFooter />
