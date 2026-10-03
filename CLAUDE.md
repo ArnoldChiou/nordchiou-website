@@ -12,7 +12,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 npm install
 npm run dev                          # 本機開發 http://localhost:3000
 npm run lint
-node scripts/export-github-pages.mjs # build + 輸出靜態站到 docs/（發布前必跑）
 node scripts/generate-news.mjs --draft     # 產生本週新聞草稿到 content/news/drafts/
 node scripts/generate-news.mjs --dry-run   # 只列候選新聞，不呼叫 Claude
 ```
@@ -20,15 +19,12 @@ node scripts/generate-news.mjs --dry-run   # 只列候選新聞，不呼叫 Clau
 - 沒有測試框架；驗證方式是 `npx tsc --noEmit -p .`、`npm run lint` 與實際開頁面。
 - **Windows 注意**：`npm run dev/build` 的 script 用了 `WRANGLER_LOG_PATH=... vinext dev` 這種 POSIX 寫法，在 cmd/PowerShell 會失敗。PowerShell 請改用 `$env:WRANGLER_LOG_PATH='.wrangler/wrangler.log'; npx vinext dev`。
 - dev server 不會即時讀到 `content/**/*.md` 的修改（文章在載入時打包），改完 Markdown 要重開 dev server。
-- 既有的 lint 錯誤（`app/not-found.tsx` 的 `<a>`、`docs/assets` 產物）與 `worker/index.ts` 的型別錯誤是原本就有的，不是新改動造成。
+- 既有的 lint 錯誤（`app/not-found.tsx` 的 `<a>`）與 `worker/index.ts` 的型別錯誤是原本就有的，不是新改動造成。
 
-## 部署（推到 main 會同時觸發兩條）
+## 部署
 
-- `.github/workflows/deploy-cloudflare.yml`：`vinext build` 後用 wrangler 部署 Cloudflare Worker（入口 `worker/index.ts`）。**正式網站 nordchiou.com 由這條提供**（`vite.config.ts` 設定 custom domain），是含 JS 的完整版。
-- `.github/workflows/deploy-pages.yml`：跑 `scripts/export-github-pages.mjs`，把 `docs/` 發布到 GitHub Pages（`arnoldchiou.github.io/nordchiou-website/`），是無 JS 的靜態版。注意站內連結、CSS 與圖片都用 `/` 開頭的絕對路徑，在這個子路徑底下會 404，所以 GitHub Pages 版目前實際上無法正常瀏覽。
-- `docs/` 是**產物但有 commit 進 repo**：改了內容或樣式後要先跑 export，把 `docs/` 的變動一起 commit（CSS 改動會讓 `docs/assets` 的雜湊檔名整批更換，屬正常現象）。
-- export 腳本**靠 `/sitemap.xml` 列舉要輸出的頁面**：新增路由若沒進 `app/sitemap.ts`，就不會出現在 `docs/`。
-- export 會**移除所有 `<script>`**（只保留 JSON-LD），靜態版沒有任何前端互動；client component 必須在無 JS 時仍可用（例如 `InquiryForm` 以 `mailto:` 表單當備援）。功能如篩選請做成獨立靜態頁，不要依賴前端 JS。
+- 推到 `main` 會觸發 `.github/workflows/deploy-cloudflare.yml`：`vinext build` 後用 wrangler 部署 Cloudflare Worker（入口 `worker/index.ts`），正式網站 nordchiou.com 由此提供（`vite.config.ts` 設定 custom domain）。發布只需 commit 原始碼，沒有需要另外產生並提交的產物。
+- 2026-10 已停用 GitHub Pages 靜態版（移除了 `deploy-pages.yml`、`docs/` 與 export 腳本），不要再加回 `docs/` 產物。
 - `public/margin_ratio/` 由外部流程每日自動 commit 更新（"Update margin ratio data to ..."），不要手動修改。
 - `.openai/hosting.json`、`build/sites-vite-plugin.ts` 是 vinext 範本的建置基礎設施，build 需要；D1/R2 綁定目前未使用，相關設定（含 `worker/index.ts` 的 `DB` 型別）保持原樣。
 
