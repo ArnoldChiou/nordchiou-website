@@ -3,6 +3,7 @@ title: "導入 RAG 知識庫前，先確認這 5 件事"
 description: "企業想把內部文件變成可以直接提問的 AI 知識庫，常卡在資料、權限與驗收標準。這篇整理導入 RAG 前最值得先確認的 5 件事，以及每一項的判斷方式。"
 date: "2026-09-23"
 category: "導入規劃"
+topic: "rag"
 cover: "/content-images/blog/rag-knowledge-base-checklist/cover.jpg"
 coverAlt: "導入 RAG 知識庫前，先確認這 5 件事：公司文件經檢索後產生附出處的回答"
 tags: ["RAG", "知識庫", "驗收標準"]

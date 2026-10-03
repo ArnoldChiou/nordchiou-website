@@ -3,6 +3,7 @@ title: "AI Agent 是什麼？2026 主流 AI Agent 比較：通用助理、辦公
 description: "ChatGPT Work、Claude Cowork、Copilot Cowork、n8n、Claude Code、Codex……AI Agent 產品越來越多，到底差在哪？這篇先說明 AI Agent 和聊天機器人的差別，再把主流產品分成四種類型比較，幫你判斷該從哪一種開始。"
 date: "2026-10-02"
 category: "產業觀察"
+topic: "ai-agent"
 cover: "/content-images/blog/ai-agent-comparison/cover.jpg"
 coverAlt: "AI Agent 比較：通用助理、辦公套件、自建平台到程式開發工具，示意圖為 AI Agent 依序完成搜尋競品、整理表格、產出簡報，最後等待使用者確認後寄出"
 tags: ["AI Agent", "生成式 AI", "工具比較"]

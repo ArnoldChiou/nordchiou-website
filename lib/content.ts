@@ -9,9 +9,13 @@ import rehypeSlug from "rehype-slug";
 import rehypeStringify from "rehype-stringify";
 import {
   BLOG_CATEGORIES,
+  BLOG_TOPICS,
   type BlogCategory,
+  type BlogTopicSlug,
   isBlogCategory,
+  isBlogTopic,
   normalizeTag,
+  TOPIC_READING_ORDER,
 } from "./taxonomy";
 
 export type Collection = "blog" | "news";
@@ -25,6 +29,7 @@ export type Post = {
   updated?: string;
   tags: string[];
   category?: BlogCategory;
+  topic?: BlogTopicSlug;
   cover?: string;
   coverAlt?: string;
   draft: boolean;
@@ -84,6 +89,11 @@ function parseFile(collection: Collection, path: string, raw: string): Post {
       `blog/${slug}.md 的 category 必須是：${BLOG_CATEGORIES.join("、")}（目前是 ${meta.category ?? "未填"}）`,
     );
   }
+  if (collection === "blog" && !isBlogTopic(meta.topic)) {
+    throw new Error(
+      `blog/${slug}.md 的 topic 必須是：${BLOG_TOPICS.map((topic) => topic.slug).join("、")}（目前是 ${meta.topic ?? "未填"}）`,
+    );
+  }
   // 有封面就必須有替代文字（無障礙與 SEO）
   if (meta.cover && !meta.coverAlt)
     throw new Error(`${collection}/${slug}.md 有 cover 但缺少 coverAlt`);
@@ -96,6 +106,7 @@ function parseFile(collection: Collection, path: string, raw: string): Post {
     date: String(meta.date),
     updated: meta.updated ? String(meta.updated) : undefined,
     category: collection === "blog" ? meta.category : undefined,
+    topic: collection === "blog" ? meta.topic : undefined,
     cover: meta.cover ? String(meta.cover) : undefined,
     coverAlt: meta.coverAlt ? String(meta.coverAlt) : undefined,
     tags: Array.isArray(meta.tags)
@@ -134,6 +145,14 @@ export function getPost(
   slug: string,
 ): Post | undefined {
   return posts[collection].find((post) => post.slug === slug);
+}
+
+export function getTopicPosts(topic: BlogTopicSlug): Post[] {
+  const rank = (post: Post) =>
+    post.category ? TOPIC_READING_ORDER.indexOf(post.category) : TOPIC_READING_ORDER.length;
+  return posts.blog
+    .filter((post) => post.topic === topic)
+    .sort((a, b) => rank(a) - rank(b) || a.date.localeCompare(b.date) || a.slug.localeCompare(b.slug));
 }
 
 type HastNode = {

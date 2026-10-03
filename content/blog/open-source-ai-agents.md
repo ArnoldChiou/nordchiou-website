@@ -3,6 +3,7 @@ title: "OpenClaw、Hermes Agent 怎麼選？2026 開源自架 AI Agent 比較與
 description: "OpenClaw 爆紅之後，Hermes Agent、NanoClaw、ZeroClaw、Nanobot，以及 NVIDIA 的 NemoClaw 一一出現。這篇說明這類「住在你電腦上」的開源 AI Agent 是什麼、五個主流專案差在哪，以及安裝前一定要先做好的安全設定。"
 date: "2026-10-02"
 category: "產業觀察"
+topic: "ai-agent"
 cover: "/content-images/blog/open-source-ai-agents/cover.jpg"
 coverAlt: "OpenClaw、Hermes Agent 怎麼選：開源自架 AI Agent 比較與安全指南，示意圖為使用者在通訊軟體請 Agent 每天早上 8 點整理產業新聞，Agent 回覆已建立排程任務"
 tags: ["AI Agent", "OpenClaw", "開源"]

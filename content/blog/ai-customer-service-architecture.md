@@ -3,6 +3,7 @@ title: "AI 客服技術實作：LINE Messaging API × LLM 的架構與程式範�
 description: "從 Webhook 驗簽、冪等處理、對話狀態、Tool Use 意圖路由、混合檢索、Guardrail、Reply Token 時限到轉接真人，用 TypeScript 範例拆解一套可上線的 LINE AI 客服後端。"
 date: "2026-09-30"
 category: "技術實作"
+topic: "ai-customer-service"
 cover: "/content-images/blog/ai-customer-service-architecture/cover.jpg"
 coverAlt: "AI 客服技術實作：LINE Webhook 經過驗簽與佇列，由 LLM 透過工具呼叫查詢知識庫與訂單系統，通過檢查後回覆客人"
 tags: ["AI 客服", "LINE 機器人", "RAG", "AI Agent"]

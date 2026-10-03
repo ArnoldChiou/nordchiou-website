@@ -3,6 +3,7 @@ title: "AI 客服系統怎麼建置：從規劃、架構到上線的完整指南
 description: "想用 AI 客服自動回覆 LINE 與網站訊息，卻擔心答錯、亂承諾、客人找不到真人？這篇從哪些問題適合交給 AI、系統架構、轉真人規則、建置步驟、成本到上線指標，完整整理企業建置 AI 客服的做法。"
 date: "2026-09-30"
 category: "導入規劃"
+topic: "ai-customer-service"
 cover: "/content-images/blog/ai-customer-service-guide/cover.jpg"
 coverAlt: "AI 客服系統建置指南：LINE 與網站訊息進入 AI 客服，常見問題自動回覆、查詢串接系統、處理不了時轉接真人"
 tags: ["AI 客服", "LINE 機器人", "RAG"]

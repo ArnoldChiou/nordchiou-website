@@ -3,6 +3,7 @@ title: "2026 年企業 RAG 怎麼做：6 個真正有用的檢索技術"
 description: "RAG 知識庫答不好，問題通常出在「找資料」這一步。這篇整理 2026 年企業實務上最有效的 RAG 技術：長上下文與快取、混合檢索、重新排序、Contextual Retrieval、視覺文件檢索、Agentic RAG，以及 GraphRAG 適合的情境。"
 date: "2026-09-24"
 category: "技術實作"
+topic: "rag"
 cover: "/content-images/blog/rag-techniques-2026/cover.jpg"
 coverAlt: "2026 年企業 RAG 怎麼做：6 個真正有用的檢索技術，以多層篩選把大量文件段落篩成少數相關段落"
 tags: ["RAG", "知識庫", "AI Agent"]

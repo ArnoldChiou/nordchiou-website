@@ -3,6 +3,7 @@ title: "RAG 已死？拆解這個說法的 5 個理由與 7 個盲點"
 description: "2026 年「RAG 已死」的說法越來越常見：上下文窗口到了百萬 token、Claude Code 放棄向量資料庫改用 grep。這篇整理這派說法的來龍去脈、他們說對的地方，以及套用到企業知識庫時容易忽略的 7 件事。"
 date: "2026-09-29"
 category: "產業觀察"
+topic: "rag"
 cover: "/content-images/blog/is-rag-dead/cover.jpg"
 coverAlt: "RAG 已死？被淘汰的是 2023 年的單次向量檢索，檢索本身正轉向由 AI 代理主導的多輪搜尋"
 tags: ["RAG", "知識庫", "AI Agent"]
