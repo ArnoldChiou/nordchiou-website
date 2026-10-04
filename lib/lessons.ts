@@ -40,11 +40,21 @@ export const LESSONS: Lesson[] = [
     coverAlt: "Token 插圖：文字被切成彩色小方塊，排進一條接近塞滿的長條視窗，最舊的方塊掉出視窗，旁邊是代表費用的硬幣",
     related: ["is-rag-dead", "rag-techniques-2026"],
   },
+  {
+    slug: "agent",
+    title: "AI Agent 如何呼叫工具？",
+    description: "從工具說明書、思考與行動的決策迴圈、出錯時換方法，到高風險動作的人工核准與回合上限，逐步播放一個客服 Agent 處理查物流、退款的完整過程。",
+    kicker: "AGENT / TOOL USE",
+    steps: 5,
+    minutes: 10,
+    date: "2026-10-04",
+    cover: "/content-images/learn/agent/cover.jpg",
+    coverAlt: "AI Agent 插圖：中央的 Agent 被思考、行動、觀察的循環箭頭圍繞，連接訂單、Email、物流與退款等工具卡，退款卡上有等待人工核准的標記",
+    related: ["ai-agent-comparison", "open-source-ai-agents", "ai-customer-service-architecture"],
+  },
 ];
 
 // 尚未上線的課程，只在教學首頁預告
-export const UPCOMING_LESSONS: Pick<Lesson, "title" | "description" | "kicker">[] = [
-  { title: "AI Agent 如何呼叫工具？", description: "模型決定要查 ERP、寄信還是轉真人的那一刻，背後的思考與工具呼叫迴圈長什麼樣子。", kicker: "AGENT / TOOL USE" },
-];
+export const UPCOMING_LESSONS: Pick<Lesson, "title" | "description" | "kicker">[] = [];
 
 export const getLesson = (slug: string) => LESSONS.find((lesson) => lesson.slug === slug);
