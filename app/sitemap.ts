@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { type Collection, getPosts, getTopicPosts } from "@/lib/content";
+import { LESSONS } from "@/lib/lessons";
 import { BLOG_TOPICS } from "@/lib/taxonomy";
 import { PRIVACY_UPDATED, SITE_URL } from "@/lib/site";
 
@@ -27,12 +28,21 @@ function topics(): MetadataRoute.Sitemap {
   });
 }
 
+function lessons(): MetadataRoute.Sitemap {
+  const latest = LESSONS.map((lesson) => lesson.updated ?? lesson.date).sort().at(-1) ?? HOME_UPDATED;
+  return [
+    { url: `${SITE_URL}/learn`, lastModified: latest },
+    ...LESSONS.map((lesson) => ({ url: `${SITE_URL}/learn/${lesson.slug}`, lastModified: lesson.updated ?? lesson.date })),
+  ];
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: `${SITE_URL}/`, lastModified: HOME_UPDATED },
     ...section("blog"),
     ...topics(),
     ...section("news"),
+    ...lessons(),
     { url: `${SITE_URL}/privacy-policy`, lastModified: PRIVACY_UPDATED },
   ];
 }

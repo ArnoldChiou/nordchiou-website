@@ -34,5 +34,6 @@
 
 - [首頁](https://nordchiou.com/)：服務、應用情境、技術能力、合作流程、方案報價、保固條款、工程實績與常見問題
 - [AI 新聞週報](https://nordchiou.com/news)：每週精選對台灣企業有影響的 AI 新聞與企業觀點短評（RSS：https://nordchiou.com/news/rss.xml）
+- [AI 教學](https://nordchiou.com/learn)：用互動動畫一步一步拆解 AI 原理，例如 [RAG 知識庫問答如何運作](https://nordchiou.com/learn/rag)（切塊、向量化、檢索、組合提示、生成）、[Token 與上下文視窗](https://nordchiou.com/learn/tokens)（分詞、BPE 詞表、上下文上限與 API 成本試算）
 - [部落格](https://nordchiou.com/blog)：企業 AI 導入實務筆記（RSS：https://nordchiou.com/blog/rss.xml）
 - [隱私權政策](https://nordchiou.com/privacy-policy)：個人資料的蒐集目的、保存期間與當事人權利；詢價資料不用於行銷
