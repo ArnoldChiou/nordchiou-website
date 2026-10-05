@@ -44,10 +44,15 @@ const capabilities = [
 ];
 
 const portfolio = [
-  { tag: "HEALTHCARE / AI AGENT", title: "HIS 同意書 AI 協作製作流程", description: "為醫療院所把 HIS 同意書的修改與交付整理成 AI 協作工作流：使用者在 Telegram 用自然語言提出需求，AI 讀懂附件、只修改被授權的表單並執行驗證，經人工確認後才推送 GitHub 與交付 ZIP。", stats: [["Telegram", "自然語言提出需求"], ["人工確認", "上線前最終把關"]], features: ["讀懂 DOCX／PDF／截圖等附件與版面需求", "語法、編碼、SHA-256 等固定檢查交給腳本", "checkpoint 與 session reset 管理上下文"], accent: "violet", image: "/portfolio/his-consent-ai.webp", alt: "HIS 同意書 AI 協作製作流程示意圖：Telegram 需求、AI 修改、腳本檢查、人工確認與交付", width: 1280, height: 720 },
-  { tag: "CRYPTO / RUST", title: "Alpharnold Quant Trading System", description: "面向 Binance Futures 的多策略量化交易引擎，7×24 無人值守運行，涵蓋即時行情、策略執行、下單、狀態回滾與部位對帳。", stats: [["6 個月", "實盤運行"], ["3 個", "管理交易對"]], features: ["多幣種、多策略併行", "斷線與失敗狀態回復", "交易所倉位自動對帳"], accent: "lime", image: "/portfolio/alpharnold-system.webp", alt: "Alpharnold 量化交易引擎系統架構與執行狀態展示", width: 1280, height: 720 },
-  { tag: "DESKTOP APP / GPU + CPU", title: "Backtest Studio", description: "支援加密貨幣與台指期的桌面運算平台，把大量參數組合的運算工作自動化，並輸出可比較的結果與交易明細。", stats: [["30 秒", "跑完 6 年歷史回測"], ["5 位", "授權使用者"]], features: ["大量參數批次運算", "CPU / GPU 平行最佳化", "成本、滑價與轉倉模型"], accent: "blue", image: "/portfolio/backtest-studio.webp", alt: "Backtest Studio 實際授權登入與回測工作台畫面", width: 1280, height: 614 },
-  { tag: "AUTOMATION / SHIOAJI API", title: "個股期貨自動下單機", description: "串接永豐金 Shioaji 的自動化交易系統，把原本人工盯盤的流程改成自動篩選、即時判斷與風控攔截。", stats: [["20 筆", "日均處理委託"], ["70%", "省下看盤時間"]], features: ["網頁化監控與參數調整", "模擬、訊號、正式分級執行", "委託回報與風控狀態機"], accent: "amber", image: "/portfolio/api-trade.webp", alt: "個股期貨下單機實際策略參數與監控介面", width: 1280, height: 720 },
+  { tag: "MANUFACTURING / AI ORDER ASSISTANT", title: "電子零件廠訂單管理與 AI 助理", description: "電子零件工廠原本以紙本處理訂單與報價，人工核對常有遺漏，重複確認也耗掉大量時間。我們從零建置電子訂單管理系統並導入 AI：業務用口語就能確認訂單狀態，客戶詢價時自動產生報價單並寄送 Email。", stats: [["2,000+ 件", "每月處理訂單"], ["70%", "省下工時"], ["< 1%", "錯誤率"], ["6 個月", "上線運行"]], features: ["口語查詢訂單、交期與庫存", "報價寄出前自動比對歷史成交價，明顯偏低時攔截並警告", "API 與系統入口自建，從源頭壓低錯誤率"], accent: "blue", image: "/portfolio/factory-order-ai.webp", alt: "電子零件廠訂單管理系統與 AI 助理示意畫面：訂單總覽、口語查詢訂單與自動產生報價單，客戶名稱已遮蔽", width: 1280, height: 720 },
+  { tag: "HEALTHCARE / AI AGENT", title: "HIS 同意書 AI 協作製作流程", description: "為醫療院所把 HIS 同意書的修改與交付整理成 AI 協作工作流：使用者在 Telegram 用自然語言提出需求，AI 讀懂附件、只修改被授權的表單並執行驗證，經人工確認後才推送 GitHub 與交付 ZIP。", stats: [["2 週", "從需求到導入交付"], ["200 件", "已處理同意書"]], features: ["讀懂 DOCX／PDF／截圖等附件與版面需求", "語法、編碼、SHA-256 等固定檢查交給腳本", "經人工確認後才推送與交付"], accent: "violet", image: "/portfolio/his-consent-ai.webp", alt: "HIS 同意書 AI 協作製作流程示意圖：Telegram 需求、AI 修改、腳本檢查、人工確認與交付", width: 1280, height: 720 },
+];
+
+// 自建交易系統合併為一張精簡卡，作為工程能力佐證
+const tradingSystems = [
+  { name: "Alpharnold 量化交易引擎", desc: "Binance Futures 多策略引擎，7×24 無人值守，含斷線回復與倉位自動對帳。", stat: ["6 個月", "實盤運行"] },
+  { name: "Backtest Studio", desc: "CPU／GPU 平行運算的桌面回測平台，大量參數組合批次運算與結果比較。", stat: ["30 秒", "跑完 6 年歷史回測"] },
+  { name: "個股期貨自動下單機", desc: "串接永豐金 Shioaji，把人工盯盤改成自動篩選、即時判斷與風控攔截。", stat: ["70%", "省下看盤時間"] },
 ];
 
 const process = [
@@ -256,9 +261,10 @@ export default function Home() {
       </div></section>
 
       <section className="work-section" id="work"><div className="shell section">
-        <div className="section-heading"><p className="kicker">TRACK RECORD</p><h2>AI 導入實績，<br />與不能停機的系統</h2><p>第一個是客戶委託的 AI 協作流程，其餘是我們自行開發、至今仍在運行的交易系統。共同的工程標準——穩定、可監控、可回復、關鍵步驟由人把關——就是我們交付 AI 專案的底線。</p></div>
-        <div className="portfolio-list">{portfolio.map((item,index)=><article className={`portfolio-card ${item.accent}`} key={item.title}><div className="portfolio-index">0{index+1}</div><div className="portfolio-visual"><PortfolioZoom src={item.image} alt={item.alt} width={item.width} height={item.height} title={item.title} /></div><div className="portfolio-main"><span>{item.tag}</span><h3>{item.title}</h3><p>{item.description}</p><div className="portfolio-stats">{item.stats.map(([num,label])=><div key={label}><strong>{num}</strong><span>{label}</span></div>)}</div><ul>{item.features.map(feature=><li key={feature}>{feature}</li>)}</ul></div></article>)}</div>
-        <p className="work-note">交易系統開發（自動下單機、策略回測、API 串接）仍在服務範圍內，歡迎來信詢問。</p>
+        <div className="section-heading"><p className="kicker">TRACK RECORD</p><h2>AI 導入實績，<br />與背後的工程底子</h2><p>客戶委託的 AI 導入專案，以及我們自建、至今仍在運行的系統。穩定、可監控、可回復、關鍵步驟由人把關——是我們交付每個 AI 專案的底線。</p></div>
+        <div className="portfolio-list">{portfolio.map((item,index)=><article className={`portfolio-card ${item.accent}`} key={item.title}><div className="portfolio-index">0{index+1}</div><div className="portfolio-visual"><PortfolioZoom src={item.image} alt={item.alt} width={item.width} height={item.height} title={item.title} /></div><div className="portfolio-main"><span>{item.tag}</span><h3>{item.title}</h3><p>{item.description}</p><div className="portfolio-stats">{item.stats.map(([num,label])=><div key={label}><strong>{num}</strong><span>{label}</span></div>)}</div><ul>{item.features.map(feature=><li key={feature}>{feature}</li>)}</ul></div></article>)}
+          <article className="portfolio-card lime compact"><div className="portfolio-index">0{portfolio.length+1}</div><div className="portfolio-main"><span>ENGINEERING / SELF-BUILT SYSTEMS</span><h3>自建交易系統：7×24 不能停機的工程底子</h3><p>工作室從量化交易系統起家，以下系統至今仍在運行。即時資料、外部 API 串接、失敗回復與風控攔截，正是 AI Agent 上線時同樣需要的工程能力。交易系統開發也持續承接。</p><div className="system-grid">{tradingSystems.map((sys)=><div key={sys.name}><h4>{sys.name}</h4><p>{sys.desc}</p><b>{sys.stat[0]}</b><small>{sys.stat[1]}</small></div>)}</div></div></article>
+        </div>
       </div></section>
 
       <section className="section shell about-section" id="about">
