@@ -20,6 +20,11 @@ export const BLOG_TOPICS = [
     name: "AI Agent",
     description: "會自己規劃步驟、使用工具、把事情做完的 AI：主流產品怎麼比、開源自架方案怎麼選，以及導入前該注意的安全問題。",
   },
+  {
+    slug: "ai-models",
+    name: "AI 模型種類",
+    description: "Claude、GPT、Gemini、開源模型、小型模型……AI 模型越來越多，各自適合什麼工作、價格差多少、企業該怎麼挑。",
+  },
 ] as const;
 
 export type BlogTopic = (typeof BLOG_TOPICS)[number];
