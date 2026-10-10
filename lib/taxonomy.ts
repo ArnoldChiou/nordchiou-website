@@ -25,6 +25,11 @@ export const BLOG_TOPICS = [
     name: "AI 模型種類",
     description: "Claude、GPT、Gemini、開源模型、小型模型……AI 模型越來越多，各自適合什麼工作、價格差多少、企業該怎麼挑。",
   },
+  {
+    slug: "ai-workflow",
+    name: "我的 AI 工作方式",
+    description: "實際分享我每天怎麼用 AI 工作：用了哪些工具、怎麼安裝設定，以及多個 AI 怎麼分工合作。",
+  },
 ] as const;
 
 export type BlogTopic = (typeof BLOG_TOPICS)[number];
