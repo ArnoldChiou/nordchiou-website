@@ -4,6 +4,8 @@ description: "我每天同時讓 Claude Code、Codex 等多個 AI 助理一起�
 date: "2026-10-10"
 category: "技術實作"
 topic: "ai-workflow"
+cover: "/content-images/blog/herdr-ai-agent-workspace/cover.jpg"
+coverAlt: "同時開好幾個 AI 助理怎麼管？Herdr 介紹與安裝教學，封面示意一個畫面分成 Claude Code、Codex 與指令列三格，側邊列出工作中、等待中、已完成三種狀態"
 tags: ["AI Agent", "Claude Code", "Codex", "工具介紹"]
 ---
 
@@ -54,6 +56,12 @@ Herdr 偵測到的 AI 狀態有這幾種：
 | `idle` | 閒置中，等待下一個指令 | 可以交辦新工作 |
 | `unknown` | Herdr 無法判斷 | 點進去看一下 |
 
+實際畫面長這樣（示範環境，三個專案都是範例）：
+
+![Herdr 實際畫面：左側側邊欄列出 company-website、sales-report、customer-faq 三個工作區與各自的 AI，黃點代表工作中、藍點代表已完成、紅點代表等待處理；右側畫面切成三格，左上是正在撰寫官網文案的 Claude Code，右邊是同時在寫用詞規範的 Codex，左下是預覽網站用的指令列](/content-images/blog/herdr-ai-agent-workspace/overview.webp "/content-images/blog/herdr-ai-agent-workspace/overview-mobile.webp")
+
+左邊的側邊欄是重點：上半部的 spaces 是工作區清單，下半部的 agents 列出所有 AI 和它所在的專案。圓點顏色就是狀態：**黃色是工作中、藍色是已完成、紅色是在等你處理**。
+
 ### 基本資料
 
 | 項目 | 說明 |
@@ -72,7 +80,11 @@ Herdr 本身**不是** AI，也不會取代 Claude Code 或 Codex。它只負責
 
 AI 助理在執行比較敏感的操作前（例如刪除檔案、執行陌生指令），會停下來問「可以嗎？」。以前我開四、五個視窗，常常某個 AI 等了二十分鐘我才發現。
 
-Herdr 的側邊欄會把**所有專案**的 AI 狀態都列出來。只要看到 `blocked`，我就知道該去哪裡處理，不用一個一個視窗點開檢查。
+Herdr 的側邊欄會把**所有專案**的 AI 狀態都列出來。只要看到 `blocked`（紅點），我就知道該去哪裡處理，不用一個一個視窗點開檢查。
+
+![Herdr 中等待批准的 AI：側邊欄的 customer-faq 顯示紅點，點進去可以看到 Claude Code 寫好了客服 FAQ 內容，正在詢問「Do you want to create faq.md?」，等待使用者選擇 Yes 或 No](/content-images/blog/herdr-ai-agent-workspace/blocked.webp "/content-images/blog/herdr-ai-agent-workspace/blocked-mobile.webp")
+
+上圖就是一個卡住的例子：客服 FAQ 專案的 Claude 已經寫好內容，正在問「要建立 faq.md 這個檔案嗎？」。側邊欄的紅點會一直亮著，直到我回答為止。
 
 ### 問題二：關掉視窗，工作就斷了
 
