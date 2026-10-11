@@ -183,7 +183,7 @@ export default function Home() {
         <HeroDemo />
       </header>
 
-      <section className="proof-strip"><div className="shell proof-grid"><div><strong>4</strong><span>核心導入方案</span></div><div><strong>3</strong><span>自建上線系統</span></div><div><strong>3 個月</strong><span>程式錯誤保固</span></div><div><strong>分階段</strong><span>診斷、導入、維運</span></div></div></section>
+      <section className="proof-strip" aria-label="客戶導入成果"><div className="shell proof-grid"><div><strong>2,000+ 件</strong><span>製造業每月訂單</span></div><div><strong>70%</strong><span>訂單作業省下工時</span></div><div><strong>&lt; 1%</strong><span>訂單錯誤率</span></div><div><strong>200 件</strong><span>醫療院所同意書</span></div></div></section>
 
       <section className="section shell" id="services">
         <div className="section-heading split"><div><p className="kicker">WHAT WE BUILD</p><h2>四種把 AI<br />接進公司的方式</h2></div><p>不賣訂閱制的罐頭工具。依照你實際的流程、資料與既有系統，打造能驗證、可監控、能維護的專屬方案。</p></div>
@@ -199,6 +199,13 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      <section className="work-section" id="work"><div className="shell section">
+        <div className="section-heading"><p className="kicker">TRACK RECORD</p><h2>AI 導入實績，<br />與背後的工程底子</h2><p>客戶委託的 AI 導入專案，以及我們自建、至今仍在運行的系統。穩定、可監控、可回復、關鍵步驟由人把關——是我們交付每個 AI 專案的底線。</p></div>
+        <div className="portfolio-list">{portfolio.map((item,index)=><article className={`portfolio-card ${item.accent}`} key={item.title}><div className="portfolio-index">0{index+1}</div><div className="portfolio-visual"><PortfolioZoom src={item.image} alt={item.alt} width={item.width} height={item.height} title={item.title} /></div><div className="portfolio-main"><span>{item.tag}</span><h3>{item.title}</h3><p>{item.description}</p><div className="portfolio-stats">{item.stats.map(([num,label])=><div key={label}><strong>{num}</strong><span>{label}</span></div>)}</div><ul>{item.features.map(feature=><li key={feature}>{feature}</li>)}</ul></div></article>)}
+          <article className="portfolio-card lime compact"><div className="portfolio-index">0{portfolio.length+1}</div><div className="portfolio-main"><span>ENGINEERING / SELF-BUILT SYSTEMS</span><h3>自建交易系統：7×24 不能停機的工程底子</h3><p>工作室從量化交易系統起家，以下系統至今仍在運行。即時資料、外部 API 串接、失敗回復與風控攔截，正是 AI Agent 上線時同樣需要的工程能力。交易系統開發也持續承接。</p><div className="system-grid">{tradingSystems.map((sys)=><div key={sys.name}><h4>{sys.name}</h4><p>{sys.desc}</p><b>{sys.stat[0]}</b><small>{sys.stat[1]}</small></div>)}</div></div></article>
+        </div>
+      </div></section>
 
       <section className="section shell scenario-section" id="scenarios">
         <div className="section-heading split"><div><p className="kicker">USE CASES</p><h2>導入之後，<br />日常會變成這樣</h2></div><p>以下為常見的導入示範情境，並非特定客戶案例。實際範圍會在導入診斷時，依你的流程與資料一起確認。</p></div>
@@ -257,13 +264,6 @@ export default function Home() {
           <div className="warranty-row change"><span>↻</span><div><h3>知識內容與提示調整</h3><p>上線後的知識庫文件更新、提示詞微調與回答調校，依調整範圍與頻率報價；維運方案內含一定額度的例行更新。</p></div></div>
           <div className="warranty-row excluded"><span>—</span><div><h3>不屬於程式錯誤保固</h3><p>新增功能或場景、第三方模型與 API 的規格變更或費率調整、來源資料品質、網路與主機故障、帳號權限、非約定環境或不當操作所造成的問題，另行評估報價。</p></div></div>
           <div className="warranty-row risk"><span>!</span><div><h3>AI 使用風險聲明</h3><p>生成式 AI 仍可能產生不正確或不完整的內容。系統會盡可能附上來源出處並提供審核機制，但重要決策仍須由人工複核；模型供應商的服務條款、費率與可用性由其自行調整，不在本工作室控制範圍內。</p></div></div>
-        </div>
-      </div></section>
-
-      <section className="work-section" id="work"><div className="shell section">
-        <div className="section-heading"><p className="kicker">TRACK RECORD</p><h2>AI 導入實績，<br />與背後的工程底子</h2><p>客戶委託的 AI 導入專案，以及我們自建、至今仍在運行的系統。穩定、可監控、可回復、關鍵步驟由人把關——是我們交付每個 AI 專案的底線。</p></div>
-        <div className="portfolio-list">{portfolio.map((item,index)=><article className={`portfolio-card ${item.accent}`} key={item.title}><div className="portfolio-index">0{index+1}</div><div className="portfolio-visual"><PortfolioZoom src={item.image} alt={item.alt} width={item.width} height={item.height} title={item.title} /></div><div className="portfolio-main"><span>{item.tag}</span><h3>{item.title}</h3><p>{item.description}</p><div className="portfolio-stats">{item.stats.map(([num,label])=><div key={label}><strong>{num}</strong><span>{label}</span></div>)}</div><ul>{item.features.map(feature=><li key={feature}>{feature}</li>)}</ul></div></article>)}
-          <article className="portfolio-card lime compact"><div className="portfolio-index">0{portfolio.length+1}</div><div className="portfolio-main"><span>ENGINEERING / SELF-BUILT SYSTEMS</span><h3>自建交易系統：7×24 不能停機的工程底子</h3><p>工作室從量化交易系統起家，以下系統至今仍在運行。即時資料、外部 API 串接、失敗回復與風控攔截，正是 AI Agent 上線時同樣需要的工程能力。交易系統開發也持續承接。</p><div className="system-grid">{tradingSystems.map((sys)=><div key={sys.name}><h4>{sys.name}</h4><p>{sys.desc}</p><b>{sys.stat[0]}</b><small>{sys.stat[1]}</small></div>)}</div></div></article>
         </div>
       </div></section>
 

@@ -5,7 +5,7 @@ export const LINE_URL = "https://lin.ee/65uAD7mm";
 
 // 用 /# 開頭，部落格等子頁面也能跳回首頁區塊
 const navLinks: [string, string][] = [
-  ["/#services", "服務"], ["/#scenarios", "應用情境"], ["/#pricing", "方案"], ["/#work", "實績"],
+  ["/#services", "服務"], ["/#work", "實績"], ["/#scenarios", "應用情境"], ["/#pricing", "方案"],
   ["/#about", "關於"], ["/#faq", "常見問題"], ["/learn", "AI 教學"], ["/news", "AI 新聞"], ["/blog", "部落格"],
 ];
 
